@@ -39,10 +39,15 @@ export type Animatable =
 -- A task which can be accepted for cleanup.
 export type Task =
 	Instance |
-	RBXScriptConnection |
 	() -> () |
+	RBXScriptConnection |
+	thread |
+	{Connected: boolean, Disconnect: (self: unknown) -> ()} |
+	{getStatus: (self: unknown) -> string, cancel: (self: unknown) -> ()} |
 	{destroy: (unknown) -> ()} |
 	{Destroy: (unknown) -> ()} |
+	{disconnect: (unknown) -> ()} |
+	{Disconnect: (unknown) -> ()} |
 	{Task}
 
 -- A scope of tasks to clean up.
@@ -67,6 +72,8 @@ export type Contextual<T> = {
 	now: (Contextual<T>) -> T,
 	is: (Contextual<T>, T) -> ContextualIsMethods
 }
+
+export type ContextualConstructor = <T>(defaultValue: T) -> Contextual<T>
 
 type ContextualIsMethods = {
 	during: <R, A...>(ContextualIsMethods, (A...) -> R, A...) -> R
@@ -195,6 +202,17 @@ export type NewConstructor = (
 	className: string
 ) -> (propertyTable: PropertyTable) -> Instance
 
+export type MarkupConstructor = ((
+	scope: Scope<unknown>,
+	component: string,
+	props: {[string]: unknown},
+	...Child
+) -> Instance) & (<Props, Returns>(
+	scope: Scope<unknown>,
+	component: (scope: Scope<unknown>, props: Props) -> Returns,
+	props: Props
+) -> Returns)
+
 export type HydrateConstructor = (
 	scope: Scope<unknown>,
 	target: Instance
@@ -231,23 +249,28 @@ export type ScopedConstructor = (() -> Scope<{}>)
 	& (<A, B, C, D, E, F, G, H, I, J, K>(A & {}, B & {}, C & {}, D & {}, E & {}, F & {}, G & {}, H & {}, I & {}, J & {}, K & {}) -> Scope<A & B & C & D & E & F & G & H & I & J & K>)
 	& (<A, B, C, D, E, F, G, H, I, J, K, L>(A & {}, B & {}, C & {}, D & {}, E & {}, F & {}, G & {}, H & {}, I & {}, J & {}, K & {}, L & {}) -> Scope<A & B & C & D & E & F & G & H & I & J & K & L>)
 
-export type ContextualConstructor = <T>(defaultValue: T) -> Contextual<T>
+export type MethodsOfConstructor = (
+	scope: Scope<unknown>,
+	target: {[unknown]: unknown}
+) -> {[unknown]: unknown}
 
-export type Safe = <Success, Fail>(
+export type SafeConstructor = <Success, Fail>(
 	callbacks: {
 		try: () -> Success,
 		fallback: (err: unknown) -> Fail
 	}
 ) -> Success | Fail
 
-export type Fusion = {
+export type Hotfusion = {
 	version: Version,
 	Contextual: ContextualConstructor,
-	Safe: Safe,
+	Safe: SafeConstructor,
+	methodsOf: MethodsOfConstructor,
 
-	doCleanup: (Task) -> (),
+	doCleanup: (task: Task) -> (),
 	scoped: ScopedConstructor,
 	deriveScope: DeriveScopeConstructor,
+	queueScope: <T...>(scope: Scope<unknown>, T...) -> T...,
 	innerScope: DeriveScopeConstructor,
 
 	peek: Use,
@@ -262,9 +285,10 @@ export type Fusion = {
 	Spring: SpringConstructor,
 
 	New: NewConstructor,
+	Markup: MarkupConstructor,
 	Hydrate: HydrateConstructor,
 
-	Child: ({Child}) -> Child,
+	Child: (x: {Child}) -> Child,
 	Children: SpecialKey,
 	Out: (propertyName: string) -> SpecialKey,
 	OnEvent: (eventName: string) -> SpecialKey,

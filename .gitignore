@@ -10,6 +10,11 @@
 # Ignore site folder
 /site/
 
+# Ignore typescript
+**/out
+**/node_modules
+*.tsbuildinfo
+
 # Ignore selene auto-generated config
 roblox.toml
 

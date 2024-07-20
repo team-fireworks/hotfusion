@@ -9,7 +9,7 @@
 local RunService = game:GetService("RunService")
 local HttpService = game:GetService("HttpService")
 
-local Package = script.Parent
+local Package = script.Parent.Parent
 local External = require(Package.External)
 
 local RobloxExternal = {}

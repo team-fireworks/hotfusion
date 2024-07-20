@@ -30,24 +30,30 @@ export type Use = Types.Use
 export type Value<T, S = T> = Types.Value<T, S>
 export type Version = Types.Version
 
--- Down the line, this will be conditional based on whether Fusion is being
--- compiled for Roblox.
+-- FIXME: Lune doesnt actually work yet, perhaps look into darklua for string requires?
 do
-	local RobloxExternal = require(script.RobloxExternal)
-	External.setExternalProvider(RobloxExternal)
+	-- selene: allow(global_usage)
+	if _G.UTIL_TARGET == "roblox" or typeof(script) == "Instance" then
+		External.setExternalProvider(require(script.External.RobloxExternal))
+	end
+	if string.sub(_VERSION, 1, 5):lower() == "lune " then
+		External.setExternalProvider(require(script.External.LuneExternal))
+	end
 end
 
-local Fusion: Types.Fusion = table.freeze {
+local Hotfusion: Types.Hotfusion = table.freeze {
 	-- General
 	version = {major = 0, minor = 3, isRelease = false},
 	Contextual = require(script.Utility.Contextual),
 	Safe = require(script.Utility.Safe),
+	methodsOf = require(script.Utility.methodsOf),
 
 	-- Memory
 	cleanup = require(script.Memory.legacyCleanup),
 	deriveScope = require(script.Memory.deriveScope),
 	doCleanup = require(script.Memory.doCleanup),
 	innerScope = require(script.Memory.innerScope),
+	queueScope = require(script.Memory.queueScope),
 	scoped = require(script.Memory.scoped),
 	
 	-- State
@@ -66,6 +72,7 @@ local Fusion: Types.Fusion = table.freeze {
 	Child = require(script.Instances.Child),
 	Children = require(script.Instances.Children),
 	Hydrate = require(script.Instances.Hydrate),
+	Markup = require(script.Instances.Markup) :: Types.MarkupConstructor,
 	New = require(script.Instances.New),
 	OnChange = require(script.Instances.OnChange),
 	OnEvent = require(script.Instances.OnEvent),
@@ -76,4 +83,4 @@ local Fusion: Types.Fusion = table.freeze {
 	Spring = require(script.Animation.Spring),
 }
 
-return Fusion
+return Hotfusion

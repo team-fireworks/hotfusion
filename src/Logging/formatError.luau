@@ -5,6 +5,7 @@ local task = nil -- Disable usage of Roblox's task scheduler
 
 --[[
 	Formats a Fusion-specific error message.
+	TEAM FIREWORKS DEVIATION: add seperation for hotfusion errors
 ]]
 
 local Package = script.Parent.Parent
@@ -22,10 +23,11 @@ local function formatError(
 	local originalMessageID = messageID
 	local error: Types.Error? = if typeof(errorOrTrace) == "table" then errorOrTrace else nil
 	local trace: string? = if typeof(errorOrTrace) == "table" then errorOrTrace.trace else errorOrTrace
-	local messageText = messages[messageID]
-	if messageText == nil then
+	local fusionMessage, hotfusionMessage = messages.Fusion[messageID], messages.Fusion[messageID]
+	local messageText = fusionMessage or hotfusionMessage
+	if not fusionMessage or not hotfusionMessage then
 		messageID = "unknownMessage"
-		messageText = messages[messageID]
+		messageText = messages.Fusion[messageID]
 	end
 	messageText = messageText:format(...)
 	if error ~= nil then
@@ -36,9 +38,11 @@ local function formatError(
 	else
 		messageText = messageText:gsub("ERROR_MESSAGE", originalMessageID)
 	end
-	messageText = `[Fusion] {messageText} \nID: {messageID}`
+	messageText = `[{fusionMessage and "Fusion" or "Hotfusion"}] {messageText} \nID: {messageID}`
 	if externalProvider ~= nil and externalProvider.policies.allowWebLinks then
-		messageText ..= `\nLearn more: {ERROR_INFO_URL}{messageID:lower()}`
+		messageText ..= fusionMessage
+			and `\nLearn more: {ERROR_INFO_URL}{messageID:lower()}`
+			or "Note that Hotfusion is a fork of Fusion, thus errors thrown are not documented with Fusion."
 	end
 	if trace ~= nil then
 		messageText ..= ` \n---- Stack trace ----\n{trace}`

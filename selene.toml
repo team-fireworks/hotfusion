@@ -1,10 +1,10 @@
-std = "roblox"
+std = "selene-requires"
 exclude = ["test/TestEZ/**"]
 
 [rules]
-# Too aggressive in tests
-unused_variable = "allow"
-# Handled by formatting/StyLua
-multiple_statements = "allow"
-# Used for Luau type assertions
-shadowing = "allow"
+	# Too aggressive in tests
+	unused_variable = "allow"
+	# Handled by formatting/StyLua
+	multiple_statements = "allow"
+	# Used for Luau type assertions
+	shadowing = "allow"
