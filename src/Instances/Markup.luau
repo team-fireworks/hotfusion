@@ -38,11 +38,11 @@ local SPECIAL_KEY_LOOKUP: {[string]: MaybeSpecialKey} = {
 }
 
 local function Markup(
-	scope: Types.Scope<unknown>,
 	component: string | Component,
 	props: {[string]: unknown},
 	...: Types.Child
 ): Instance
+	local scope = props.Scope :: Types.Scope<unknown>
 	if scope == nil then
 		External.logError("scopeMissing", nil, "instances using Markup", `myScope:Markup({tostring(component)}, \{ ... })`)
 	end

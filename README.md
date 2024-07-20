@@ -1,4 +1,4 @@
-# This is a modified fork of Fusion. The original README is below
+# This is a modified fork of Fusion. The original README is below (fyi its not production ready)
 
 This fork implements some features desired by Team Fireworks. The following are
 changes made from upstream:
@@ -30,10 +30,22 @@ You can install this fork with your preferred package manager of choice:
 ```bash
 # Wally
 wally add znotfireman/hotfusion
-# NPM
+# npm
 npm i rbxts/hotfusion
-# PNPM
+# pnpm
 pnpm i rbxts/hotfusion
+```
+
+## Using JSX
+
+Hotfusion exports a variant of `New` that uses JSX-style syntax. For it to work,
+you will have to install a development version of roblox-ts:
+
+```bash
+# npm
+npm i -D roblox-ts@=2.3.0-dev-26ec859 
+# pnpm
+pnpm i -D roblox-ts@=2.3.0-dev-26ec859  
 ```
 
 ## Errors thrown by Hotfusion
@@ -49,8 +61,6 @@ Attempted to queue a task for destruction multiple times.
 Either you've specified the same object twice in `queueScope`, or an earlier
 `queueScope` has been called on the object and scope. As Fusion discourages
 repeated destruction, Hotfusion will disallow repeated queues.
-
-If desired, you can allow overrides, see `queueScope` for more information.
 
 ---
 

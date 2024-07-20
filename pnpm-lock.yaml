@@ -36,8 +36,8 @@ importers:
         specifier: ^3.3.3
         version: 3.3.3
       roblox-ts:
-        specifier: ^2.3.0
-        version: 2.3.0
+        specifier: 2.3.0-dev-26ec859
+        version: 2.3.0-dev-26ec859
       typescript:
         specifier: ^5.5.3
         version: 5.5.3
@@ -100,8 +100,8 @@ packages:
   '@rbxts/types@1.0.790':
     resolution: {integrity: sha512-GVnhUigvCuGtV7VibUb27Xo0K5Arwph+6pKtEUr9YpKvddOilEfhS4/K2BYNMuS3E6mAR81jMUVyh91uIKQXyQ==}
 
-  '@roblox-ts/luau-ast@1.0.11':
-    resolution: {integrity: sha512-+maoLYpqY0HK8ugLFHS3qz0phMyDaN3i21jjW75T2ZaqJg84heKDUo98iXClvnx3mUDhW10IxqH+cYJ2iftYhQ==}
+  '@roblox-ts/luau-ast@2.0.0':
+    resolution: {integrity: sha512-cmMi093IdwBOLVxwuordhM8AmtbyTIyRpsTbB0D/JauidW4SXsQRQowSwWjHo4QP0DRJBXvOIlxtqEQi50uNzQ==}
 
   '@roblox-ts/path-translator@1.0.0':
     resolution: {integrity: sha512-Lp6qVUqjmXIrICy2KPKRiX8IkJ+lNqn6RqoUplLiTr+4JehIN+mJv0tTnE72XRyIfcx0VWl5nKrRwUuqcOj1yg==}
@@ -658,8 +658,8 @@ packages:
     resolution: {integrity: sha512-U9nH88a3fc/ekCF1l0/UP1IosiuIjyTh7hBvXVMHYgVcfGvt897Xguj2UOLDeI5BG2m7/uwyaLVT6fbtCwTyzw==}
     engines: {iojs: '>=1.0.0', node: '>=0.10.0'}
 
-  roblox-ts@2.3.0:
-    resolution: {integrity: sha512-swz+3sxHcB1ww5iUkwxzPFqrbWYmjD9uDriLhta5MAShvRFW4Vdku/aBSU4KiLqtVWYvYo32G+5bXg1Pw2yvIA==}
+  roblox-ts@2.3.0-dev-26ec859:
+    resolution: {integrity: sha512-ttQjMLhJ/SF+0/9ew5PgA6bFhwjTMv701akdMiSqjGvvLXrQIfRwpFrOX0f7PAER5qtztruqTerRsbMfReqntw==}
     hasBin: true
 
   run-parallel@1.2.0:
@@ -734,11 +734,6 @@ packages:
   type-check@0.4.0:
     resolution: {integrity: sha512-XleUoc9uwGXqjWwXaUTZAmzMcFZ5858QA2vvx1Ur5xIcixXIP+8LnFDgRplU30us6teqdlskFfu+ae4K79Ooew==}
     engines: {node: '>= 0.8.0'}
-
-  typescript@5.2.2:
-    resolution: {integrity: sha512-mI4WrpHsbCIcwT9cF4FZvr80QUeKvsUsUvKDoR+X/7XHQH98xYD8YHZg7ANtz2GtZt/CBq2QJ0thkGJMHfqc1w==}
-    engines: {node: '>=14.17'}
-    hasBin: true
 
   typescript@5.5.3:
     resolution: {integrity: sha512-/hreyEujaB0w76zKo6717l3L0o/qEUtRgdvUBvlkhoWeOVMjMuHNHk0BRBzikzuGDqNmPQbg5ifMEqsHLiIUcQ==}
@@ -841,7 +836,7 @@ snapshots:
 
   '@rbxts/types@1.0.790': {}
 
-  '@roblox-ts/luau-ast@1.0.11': {}
+  '@roblox-ts/luau-ast@2.0.0': {}
 
   '@roblox-ts/path-translator@1.0.0':
     dependencies:
@@ -1425,16 +1420,16 @@ snapshots:
 
   reusify@1.0.4: {}
 
-  roblox-ts@2.3.0:
+  roblox-ts@2.3.0-dev-26ec859:
     dependencies:
-      '@roblox-ts/luau-ast': 1.0.11
+      '@roblox-ts/luau-ast': 2.0.0
       '@roblox-ts/path-translator': 1.0.0
       '@roblox-ts/rojo-resolver': 1.0.6
       chokidar: 3.6.0
       fs-extra: 11.2.0
       kleur: 4.1.5
       resolve: 1.22.8
-      typescript: 5.2.2
+      typescript: 5.5.3
       yargs: 17.7.2
 
   run-parallel@1.2.0:
@@ -1496,8 +1491,6 @@ snapshots:
   type-check@0.4.0:
     dependencies:
       prelude-ls: 1.2.1
-
-  typescript@5.2.2: {}
 
   typescript@5.5.3: {}
 

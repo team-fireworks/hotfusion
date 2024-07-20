@@ -3,8 +3,8 @@
 		"allowSyntheticDefaultImports": true,
 		"downlevelIteration": true,
 		"jsx": "react",
-		"jsxFactory": "Hotfusion.Markup",
-		"jsxFragmentFactory": "Hotfusion.Markup",
+		// 💀💀💀💀💀💀💀💀💀💀💀💀💀💀💀💀
+		"jsxFactory": "Markup",
 		"module": "commonjs",
 		"moduleResolution": "Node",
 		"noLib": true,

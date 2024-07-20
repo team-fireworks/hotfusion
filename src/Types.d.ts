@@ -235,37 +235,6 @@ export type PropertyTable<T extends Instance> = Partial<
 		Map<SpecialKey, unknown>
 >
 
-// https://github.com/Dionysusnu/Fusion/blob/jsx/src/Instances/jsx.d.ts
-declare global {
-	namespace JSX {
-		type JsxPropertyTable<T extends Instance> = Partial<
-			{
-				[K in keyof WritableInstanceProperties<T>]: UsedAs<WritableInstanceProperties<T>[K]>
-			} & {
-				[K in InstancePropertyNames<T> as OutKey<K>]: Value<T[K]>
-			} & {
-				[K in InstancePropertyNames<T> as OnChangeKey<K>]: (newValue: T[K]) => void
-			} & {
-				[K in InstanceEventNames<T> as OnEventKey<K>]: T[K] extends RBXScriptSignal<infer C>
-					? (...args: Parameters<C>) => void
-					: never
-			} & Record<Children, Child> &
-				Map<SpecialKey, unknown>
-		>
-		type IntrinsicElements = {
-			[K in keyof CreatableInstances as Uncapitalize<K>]: JsxPropertyTable<CreatableInstances[K]>
-		}
-		type IntrinsicAttributes = defined
-		// eslint-disable-next-line @typescript-eslint/no-unused-vars
-		type LibraryManagedAttributes<T, A> = A extends {[K in Children]: unknown} ? A : A & {[K in Children]?: never}
-		type ElementClass = never
-		type Element = Child
-		type FunctionComponent = (scope: Scope<unknown>, args: unknown[]) => Element
-		type ElementType = string | FunctionComponent
-		type ElementChildrenAttribute = Record<Children, never>
-	}
-}
-
 export type NewConstructor = <T extends keyof CreatableInstances>(
 	scope: Scope<unknown>,
 	className: T,
@@ -288,19 +257,19 @@ export type HydrateConstructor = <T extends Instances[keyof Instances]>(
 export type DeriveScopeConstructor = <Existing extends Scope<unknown>, AddMethods extends object[]>(
 	existing: Existing,
 	...addMethods: AddMethods
-) => {
+) => Scope<{
 	[Key in keyof Existing | keyof AddMethods[number]]: Key extends keyof Existing
 		? Existing[Key]
 		: Key extends keyof AddMethods[number]
 			? AddMethods[number][Key]
 			: never
-}
+}>
 
 export type ScopedConstructor = <Methods extends object[]>(
 	...methods: Methods
-) => {
+) => Scope<{
 	[Key in keyof Methods[number]]: Methods[number][Key]
-}
+}>
 
 export type Fusion = {
 	version: Version
