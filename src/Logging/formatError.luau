@@ -12,7 +12,8 @@ local Package = script.Parent.Parent
 local Types = require(Package.Types)
 local messages = require(Package.Logging.messages)
 
-local ERROR_INFO_URL = "https://elttob.uk/Fusion/0.3/api-reference/general/errors/#"
+local FUSION_ERROR_URL = "https://elttob.uk/Fusion/0.3/api-reference/general/errors/#"
+local HOTFUSION_ERROR_URL = "https://github.com/team-fireworks/hotfusion/tree/main?tab=readme-ov-file#"
 
 local function formatError(
 	externalProvider: Types.ExternalProvider?,
@@ -40,9 +41,7 @@ local function formatError(
 	end
 	messageText = `[{fusionMessage and "Fusion" or "Hotfusion"}] {messageText} \nID: {messageID}`
 	if externalProvider ~= nil and externalProvider.policies.allowWebLinks then
-		messageText ..= fusionMessage
-			and `\nLearn more: {ERROR_INFO_URL}{messageID:lower()}`
-			or "Note that Hotfusion is a fork of Fusion, thus errors thrown are not documented with Fusion."
+		messageText ..= `\nLearn more: {fusionMessage and FUSION_ERROR_URL or HOTFUSION_ERROR_URL}{messageID:lower()}`
 	end
 	if trace ~= nil then
 		messageText ..= ` \n---- Stack trace ----\n{trace}`
