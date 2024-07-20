@@ -41,14 +41,15 @@ npm i rbxts/hotfusion
 pnpm i rbxts/hotfusion
 ```
 
+## Methods
+
 Fusion 0.3 employs a greater focus on manual memory management via the use of
 scopes. You'd use constructors as methods on a scope.
 
 TypeScript does not let you specify if you're using a method of callback. For
-convenience, Hotfusion provides the `methodsOf` function.
-
-Pass in your scope, and a table of constructors, and constructors will have the
-scope silently passed for you:
+convenience, Hotfusion provides the `methodsOf` function. Pass in your scope,
+and a table of constructors, and constructors will have the scope silently
+passed for you:
 
 ```ts
 import {type BuiltinMethods, scoped, methodsOf}, Hotfusion from "@rbxts/hotfusion"
@@ -57,6 +58,8 @@ const scope = scoped()
 const {Value} = methodsOf(scope, Hotfusion)
 const myValue = Value("Hotfusion rules!")
 ```
+
+## JSX
 
 To use JSX-style `New` calls, you need to upgrade your version of roblox-ts:
 
