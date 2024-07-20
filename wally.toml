@@ -1,14 +1,14 @@
 [package]
-name = "elttob/fusion"
-description = "A modern reactive UI library, built specifically for Roblox and Luau"
-license = "MIT"
-authors = ["Elttob"]
-version = "0.3.0-dev.2"
+	name = "znotfireman/hotfusion"
+	description = "Fork of Fusion with improvements used by Team Fireworks"
+	license = "MIT"
+	authors = ["Elttob", "ImNotFireMan123"]
+	version = "0.1.0"
 
-registry = "https://github.com/UpliftGames/wally-index"
-realm = "shared"
+	registry = "https://github.com/UpliftGames/wally-index"
+	realm = "shared"
 
-exclude = ["**"]
-include = ["src", "src/*", "default.project.json", "wally.lock", "wally.toml"]
+	exclude = ["**"]
+	include = ["out", "out/*", "build.project.json", "wally.lock", "wally.toml"]
 
 [dependencies]
