@@ -37,7 +37,7 @@ local SPECIAL_KEY_LOOKUP: {[string]: MaybeSpecialKey} = {
 	Out = Out,
 }
 
-local function Markup(
+local function NewJSX(
 	component: string | Component,
 	props: {[string]: unknown},
 	...: Types.Child
@@ -88,4 +88,4 @@ local function Markup(
 	return instance
 end
 
-return Markup
+return NewJSX

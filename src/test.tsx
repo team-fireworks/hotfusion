@@ -1,5 +1,5 @@
 import Hotfusion from "."
-import {type Computed, methodsOf, scoped, Markup} from "."
+import {type Computed, methodsOf, scoped, NewJSX} from "."
 
 export = () => {
 	const scope = scoped(Hotfusion)
@@ -10,7 +10,7 @@ export = () => {
 			<textlabel
 				Scope={scope}
 				Text={
-					Computed((use, scope): string => {
+					Computed((use, scope) => {
 						return use(test) ? "Hi" : "nil"
 					}) as Computed<string>
 				}

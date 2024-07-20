@@ -1,6 +1,6 @@
+// https://github.com/Dionysusnu/Fusion/blob/jsx/src/Instances/jsx.d.ts
 import {Child, Children, OnChangeKey, OnEventKey, OutKey, Scope, SpecialKey, UsedAs, Value} from "../Types"
 
-// https://github.com/Dionysusnu/Fusion/blob/jsx/src/Instances/jsx.d.ts
 declare global {
 	namespace JSX {
 		type JsxPropertyTable<T extends Instance> = {
@@ -236,15 +236,11 @@ declare global {
 		type LibraryManagedAttributes<T, A> = A extends {[K in Children]: unknown} ? A : A & {[K in Children]?: never}
 		type ElementClass = never
 		type Element = Child
-		type FunctionComponent = (scope: Scope<unknown>, args: unknown[]) => Element
+		type FunctionComponent = (scope: Scope<unknown>, props: Record<string, unknown>) => Element
 		type ElementType = string | FunctionComponent
 		type ElementChildrenAttribute = Record<Children, never>
 	}
 }
 
-declare type MarkupConstructor = (
-	scope: Scope<unknown>,
-	element: JSX.ElementType,
-	props: defined,
-	children: Child,
-) => Instance
+declare function Markup(element: JSX.ElementType, props: {[K in string]: unknown}, children: Child): Instance
+export = Markup

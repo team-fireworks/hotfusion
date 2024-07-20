@@ -57,6 +57,7 @@ local Hotfusion: Types.Hotfusion = table.freeze {
 	scoped = require(script.Memory.scoped),
 	
 	-- State
+	await = require(script.State.await),
 	Computed = require(script.State.Computed),
 	ForKeys = require(script.State.ForKeys) :: Types.ForKeysConstructor,
 	ForPairs = require(script.State.ForPairs) :: Types.ForPairsConstructor,
@@ -72,7 +73,7 @@ local Hotfusion: Types.Hotfusion = table.freeze {
 	Child = require(script.Instances.Child),
 	Children = require(script.Instances.Children),
 	Hydrate = require(script.Instances.Hydrate),
-	Markup = require(script.Instances.Markup) :: Types.MarkupConstructor,
+	NewJSX = require(script.Instances.NewJSX) :: Types.NewJSXConstructor,
 	New = require(script.Instances.New),
 	OnChange = require(script.Instances.OnChange),
 	OnEvent = require(script.Instances.OnEvent),

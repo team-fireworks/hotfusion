@@ -152,8 +152,9 @@ export type ForValuesConstructor = <K, VI, VO, S>(
 /** An object which can listen for updates on another state object. */
 export type Observer = Dependent & {
 	type: "Observer"
-	onChange(callback: () => void): () => void
-	onBind(callback: () => void): () => void
+	listen(callback: () => void): () => void
+	subscribe(callback: () => void): () => void
+	once(callback: () => void): () => void
 }
 
 export type ObserverConstructor = (scope: Scope<unknown>, watching: unknown) => Observer
@@ -240,12 +241,7 @@ export type NewConstructor = <T extends keyof CreatableInstances>(
 	className: T,
 ) => (propertyTable: PropertyTable<CreatableInstances[T]>) => CreatableInstances[T]
 
-export type MarkupConstructor = (
-	scope: Scope<unknown>,
-	element: JSX.ElementType,
-	props: defined,
-	children: Child,
-) => Instance
+export type NewJSXConstructor = (element: JSX.ElementType, props: defined, children: Child) => Instance
 
 export type HydrateConstructor = <T extends Instances[keyof Instances]>(
 	scope: Scope<unknown>,
@@ -271,7 +267,7 @@ export type ScopedConstructor = <Methods extends object[]>(
 	[Key in keyof Methods[number]]: Methods[number][Key]
 }>
 
-export type Fusion = {
+export type Hotfusion = {
 	version: Version
 	Contextual: ContextualConstructor
 	Safe: SafeConstructor

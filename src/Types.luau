@@ -146,8 +146,9 @@ export type ForValuesConstructor =  <K, VI, VO, S>(
 -- An object which can listen for updates on another state object.
 export type Observer = Dependent & {
 	type: "Observer",
-	onChange: (Observer, callback: () -> ()) -> (() -> ()),
-	onBind: (Observer, callback: () -> ()) -> (() -> ())
+	listen: (Observer, callback: () -> ()) -> (() -> ()),
+	once: (Observer, callback: () -> ()) -> (() -> ()),
+	subscribe: (Observer, callback: () -> ()) -> (() -> ())
 }
 export type ObserverConstructor = (
 	scope: Scope<unknown>,
@@ -202,7 +203,7 @@ export type NewConstructor = (
 	className: string
 ) -> (propertyTable: PropertyTable) -> Instance
 
-export type MarkupConstructor = ((
+export type NewJSXConstructor = ((
 	scope: Scope<unknown>,
 	component: string,
 	props: {[string]: unknown},
@@ -273,6 +274,7 @@ export type Hotfusion = {
 	queueScope: <T...>(scope: Scope<unknown>, T...) -> T...,
 	innerScope: DeriveScopeConstructor,
 
+	await: Use,
 	peek: Use,
 	Value: ValueConstructor,
 	Computed: ComputedConstructor,
@@ -285,7 +287,7 @@ export type Hotfusion = {
 	Spring: SpringConstructor,
 
 	New: NewConstructor,
-	Markup: MarkupConstructor,
+	NewJSX: NewJSXConstructor,
 	Hydrate: HydrateConstructor,
 
 	Child: (x: {Child}) -> Child,

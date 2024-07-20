@@ -32,7 +32,6 @@ declare namespace Hotfusion {
 	export const methodsOf: Types.MethodsOfConstructor
 
 	/* Memory */
-
 	/** @deprecated use `doCleanup()` instead */
 	export const cleanup: (task: Task) => void
 	export const deriveScope: Types.DeriveScopeConstructor
@@ -42,6 +41,7 @@ declare namespace Hotfusion {
 	export const scoped: Types.ScopedConstructor
 
 	/* State */
+	export const await: Use
 	export const Computed: Types.ComputedConstructor
 	export const ForKeys: Types.ForKeysConstructor
 	export const ForPairs: Types.ForPairsConstructor
@@ -57,7 +57,7 @@ declare namespace Hotfusion {
 	export const Child: (child: Child[]) => Child
 	export const Children: Types.Children
 	export const Hydrate: Types.HydrateConstructor
-	export const Markup: Types.MarkupConstructor
+	export const NewJSX: Types.NewJSXConstructor
 	export const New: Types.NewConstructor
 	export const OnChange: <T extends string>(propertyName: T) => Types.OnChangeKey<T>
 	export const OnEvent: <T extends string>(eventName: T) => Types.OnEventKey<T>
