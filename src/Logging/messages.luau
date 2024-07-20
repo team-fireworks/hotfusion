@@ -48,6 +48,6 @@ return {
 		useAfterDestroy = "%s is no longer valid - it was destroyed before %s. See discussion #292 on GitHub for advice."
 	},
 	Hotfusion = {
-		queueScope = "Attempted to queue a task for destruction multiple times."
+		queuedTwice = "Attempted to queue a task for destruction multiple times."
 	}
 }
