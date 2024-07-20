@@ -1,10 +1,11 @@
 # This is a modified fork of Fusion. The original README is below
 
-This fork is built for internal usage by Team Fireworks and implements the
-following features:
+This fork implements some features desired by Team Fireworks. The following are
+changes made from upstream:
 
-- Comprehensive TypeScript declarations for `init.luau` and `Types.luau`
-- Push for a runtime agnostic Fusion, in the future implementing a
+- Implements comprehensive TypeScript declarations for `init.luau` and
+  `Types.luau`
+- Pushes for a runtime agnostic Fusion, in the future implementing a
   `LuneExternal` external for continuous integration
 - Implements a bevy of built-in utilities, mostly geared at Roblox TypeScript:
   - `methodsOf` allows silently passing in a `scope` parameter, hugely useful
@@ -15,9 +16,10 @@ following features:
     also guards against adding multiple tasks, accepts a variadic number of
     tasks, and returns the tasks you insert, allowing you to use it in
     declarations
-- `Markup` constructor which behaves like `New` with JSX markup syntax
+- Implements `Markup` constructor which behaves like `New` with JSX markup
+  syntax
 - `Computed` and similar objects now warns you if you're not using a `scope`
-  while using other constructors
+  while using other constructors (TODO: not actually implemented yet)
 - `doCleanup` has been extended to work with Promises, signals, threads, and
   and generic disconnect object methods
 - The library is renamed to Hotfusion to avoid conflicts with the original
@@ -33,6 +35,22 @@ npm i rbxts/hotfusion
 # PNPM
 pnpm i rbxts/hotfusion
 ```
+
+## Errors thrown by Hotfusion
+
+### queuedTwice
+
+```txt
+Attempted to queue a task for destruction multiple times.
+```
+
+**Thrown by:** `queueScope`
+
+Either you've specified the same object twice in `queueScope`, or an earlier
+`queueScope` has been called on the object and scope. As Fusion discourages
+repeated destruction, Hotfusion will disallow repeated queues.
+
+If desired, you can allow overrides, see `queueScope` for more information.
 
 ---
 
