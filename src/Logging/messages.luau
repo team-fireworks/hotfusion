@@ -23,7 +23,6 @@ return {
 		invalidChangeHandler = "The change handler for the '%s' property must be a function.",
 		invalidEventHandler = "The handler for the '%s' event must be a function.",
 		invalidOutProperty = "The %s class doesn't have a property called '%s'.",
-		invalidOutType = "[Out] properties must be given Value objects.",
 		invalidPropertyType = "'%s.%s' expected a '%s' type, but got a '%s' type.",
 		invalidRefType = "Instance refs must be Value objects.",
 		invalidSpringDamping = "The damping ratio for a spring must be >= 0. (damping was %.2f)",
@@ -47,6 +46,7 @@ return {
 		useAfterDestroy = "%s is no longer valid - it was destroyed before %s. See discussion #292 on GitHub for advice."
 	},
 	Hotfusion = {
+		invalidOutType = "[Out] properties must be given a Value setter function. Value objects differs from Fusion - see Hotfusion README.",
 		missingSpecialKeyValue = "Special key %s needs a value, but none was provided. Provide one with `%s:myValue={...}`.",
 		queuedTwice = "Attempted to queue a task for destruction multiple times.",
 		valueGetWasRemoved = "`Value:set()` has been deprecated. Capture the setter as a second return value from the constructor instead (e.g. `local value, setValue = Value(\"Foo\")`).",

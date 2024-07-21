@@ -227,7 +227,7 @@ export type PropertyTable<T extends Instance> = Partial<
 	} & {
 		[K in InstancePropertyNames<T> as OnChangeKey<K>]: (newValue: T[K]) => void
 	} & {
-		[K in InstancePropertyNames<T> as OutKey<K>]: Value<T[K]>
+		[K in InstancePropertyNames<T> as OutKey<K>]: ValueSetter
 	} & {
 		[K in InstanceEventNames<T> as OnEventKey<K>]: T[K] extends RBXScriptSignal<infer C>
 			? (...args: Parameters<C>) => void

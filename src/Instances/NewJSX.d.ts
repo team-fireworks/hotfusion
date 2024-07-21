@@ -1,5 +1,5 @@
 // https://github.com/Dionysusnu/Fusion/blob/jsx/src/Instances/jsx.d.ts
-import {Child, Children, OnChangeKey, OnEventKey, OutKey, Scope, SpecialKey, UsedAs, Value} from "../Types"
+import {Child, Children, OnChangeKey, OnEventKey, OutKey, Scope, SpecialKey, UsedAs, Value, ValueSetter} from "../Types"
 
 declare global {
 	namespace JSX {
@@ -15,7 +15,7 @@ declare global {
 			} & {
 				[K in keyof WritableInstanceProperties<T> as K]: UsedAs<WritableInstanceProperties<T>[K]>
 			} & {
-				[K in InstancePropertyNames<T> as OutKey<K>]: Value<T[K]>
+				[K in InstancePropertyNames<T> as OutKey<K>]: ValueSetter
 			} & {
 				[K in InstancePropertyNames<T> as OnChangeKey<K>]: (newValue: T[K]) => void
 			} & {

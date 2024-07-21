@@ -11,6 +11,7 @@ The following are changes from upstream:
 - Value constructor now exports the object and a setter callback, as in
   `(Value<T, S = T>, ValueSetter)`
   - Deprecated `Value:set()`
+  - `Out` now requires a setter function
 - Implements `Observer:onlyOnce(callback)` which behaves a single run `onChange`
 - Implements a bevy of built-in utilities:
   - `expect(watching)` yields the current running thread until the given state
@@ -156,7 +157,7 @@ Some built-in special keys can be specified directly:
   {}}`
 - `OnChange("propertyName") = function` can be written as
   `OnChange:propertyName={() => {}}`
-- `Out("propertyName") = value` can be written as `Out:propertyName={value}`
+- `Out("propertyName") = setValue` can be written as `Out:propertyName={setValue}`
 
 ## Constructors
 
@@ -206,6 +207,19 @@ const message = Computed((use) => `i LOVE ${use(lib)}!!`)
 > ```
 
 ## Errors
+
+### invalidOutType
+
+```txt
+[Out] properties must be given a Value setter function. Value objects differs from Fusion - see Hotfusion README.",
+```
+
+**Thrown by:** `Out`, `New`, `NewJSX`
+
+`Out` expected you to give it a value setter function, but you gave it something
+else.
+
+Commonly, you may have tried providing a value object directly.
 
 ### missingSpecialKeyValue
 
