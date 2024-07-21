@@ -1,15 +1,18 @@
 {
-	"name": "Fusion Test Runner",
+	"name": "Hotfusion Test Runner",
 	"tree": {
 		"$className": "DataModel",
 		"ReplicatedStorage": {
 			"$className": "ReplicatedStorage",
-			"Fusion": {
-				"$path": "default.project.json"
+			"Hotfusion": {
+				"$path": "build.project.json"
 			}
 		},
 		"ServerScriptService": {
 			"$className": "ServerScriptService",
+			"Bro why are you testing hotfusion": {
+				"$className": "StringValue"
+			},
 			"FusionTest": {
 				"$path": "test"
 			}
