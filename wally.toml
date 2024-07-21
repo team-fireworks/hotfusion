@@ -3,7 +3,7 @@
 	description = "Fork of Fusion with improvements used by Team Fireworks"
 	license = "MIT"
 	authors = ["Elttob", "ImNotFireMan123"]
-	version = "0.1.0"
+	version = "0.3.0-hotfusion.1"
 
 	registry = "https://github.com/UpliftGames/wally-index"
 	realm = "shared"

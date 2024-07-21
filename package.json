@@ -1,6 +1,6 @@
 {
 	"name": "@rbxts/hotfusion",
-	"version": "0.1.0",
+	"version": "0.3.0-hotfusion.1",
 	"description": "Fork of Fusion with improvements used by Team Fireworks",
 	"license": "MIT",
 	"repository": {
@@ -20,12 +20,12 @@
 		"reactive"
 	],
 	"main": "out/init.luau",
+	"typings": "out/index.d.ts",
 	"scripts": {
 		"build": "rbxtsc --rojo ./build.project.json",
 		"watch": "rbxtsc -w --rojo ./build.project.json",
 		"prepublishOnly": "pnpm run build"
 	},
-	"types": "out/index.d.ts",
 	"files": [
 		"out",
 		"!**/*.tsbuildinfo"
