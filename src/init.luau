@@ -45,8 +45,8 @@ local Hotfusion: Types.Hotfusion = table.freeze {
 	-- General
 	version = {major = 0, minor = 3, isRelease = false},
 	Contextual = require(script.Utility.Contextual),
+	ctorsOf = require(script.Utility.constructorsOf),
 	Safe = require(script.Utility.Safe),
-	methodsOf = require(script.Utility.methodsOf),
 
 	-- Memory
 	cleanup = require(script.Memory.legacyCleanup),
@@ -57,7 +57,7 @@ local Hotfusion: Types.Hotfusion = table.freeze {
 	scoped = require(script.Memory.scoped),
 	
 	-- State
-	await = require(script.State.await),
+	expect = require(script.State.expect),
 	Computed = require(script.State.Computed),
 	ForKeys = require(script.State.ForKeys) :: Types.ForKeysConstructor,
 	ForPairs = require(script.State.ForPairs) :: Types.ForPairsConstructor,

@@ -24,31 +24,15 @@ class.kind = "Value"
 local CLASS_METATABLE = {__index = class}
 
 --[[
-	Updates the value stored in this State object.
-
-	If `force` is enabled, this will skip equality checks and always update the
-	state object and any dependents - use this with care as this can lead to
-	unnecessary updates.
-]]
-function class:set(
-	newValue: unknown,
-	force: boolean?
-): unknown
-	local self = self :: InternalTypes.Value<unknown, unknown>
-	local oldValue = self._value
-	if force or not isSimilar(oldValue, newValue) then
-		self._value = newValue
-		updateAll(self)
-	end
-	return newValue
-end
-
---[[
 	Returns the interior value of this state object.
 ]]
 function class:_peek(): unknown
 	local self = self :: InternalTypes.Value<unknown, unknown>
 	return self._value
+end
+
+function class:set()
+	External.logError("valueSetWasRemoved")
 end
 
 function class:get()
@@ -58,7 +42,7 @@ end
 local function Value<T>(
 	scope: Types.Scope<unknown>,
 	initialValue: T
-): Types.Value<T, any>
+): (Types.Value<T, any>, Types.ValueSetter)
 	if initialValue == nil and (typeof(scope) ~= "table" or (scope[1] == nil and next(scope) ~= nil)) then
 		External.logError("scopeMissing", nil, "Value", "myScope:Value(initialValue)")
 	end
@@ -76,7 +60,26 @@ local function Value<T>(
 	self.oldestTask = destroy
 	table.insert(scope, destroy)
 
-	return self
+	--[[
+		Updates the value stored in this State object.
+
+		If `force` is enabled, this will skip equality checks and always update
+		the state object and any dependents - use this with care as this can
+		lead to unnecessary updates.
+	]]
+	local function setSelf<S>(
+		newValue: S,
+		force: boolean?
+	): S
+		local oldValue = self._value
+		if force or not isSimilar(oldValue, newValue) then
+			self._value = newValue
+			updateAll(self)
+		end
+		return newValue
+	end
+
+	return self, setSelf
 end
 
 return Value

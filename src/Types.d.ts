@@ -75,7 +75,7 @@ export type SafeConstructor = <Success, Fail>(callbacks: {
 }) => Success | Fail
 
 /** Extracts scoped constructors to implicitly pass in the scope */
-export type MethodsOfConstructor = <Constructors extends object>(
+export type ConstructorsOfConstructor = <Constructors extends object>(
 	scope: Scope<unknown>,
 	constructors: Constructors,
 ) => {
@@ -111,11 +111,11 @@ export type Use = <T>(target: UsedAs<T>) => T
 /** A state object whose value can be set at any time by the user. */
 export type Value<T, S = T> = StateObject<T> & {
 	kind: "State"
-	set(newValue: S, force?: boolean): S
 	____phantom_setType: (arg0: never) => S
 }
 
-export type ValueConstructor = <T>(scope: Scope<unknown>, initialValue: T) => Value<T, any>
+type ValueSetter = <T>(newValue: T, force?: boolean) => T
+export type ValueConstructor = <T>(scope: Scope<unknown>, initialValue: T) => LuaTuple<[Value<T, any>, ValueSetter]>
 
 /** A state object whose value is derived from other objects using a callback. */
 export type Computed<T> = StateObject<T> &
@@ -217,7 +217,7 @@ type SpecialKeyType<Kind extends string, Subtype = ""> = Subtype extends
 	| boolean
 	| null
 	| undefined
-	? `____phantom_specialKey_${Kind}${Subtype}`
+	? `${Kind}:${Subtype}`
 	: never
 
 /** A table that defines an instance's properties, handlers and children. */
@@ -236,17 +236,17 @@ export type PropertyTable<T extends Instance> = Partial<
 		Map<SpecialKey, unknown>
 >
 
+export type HydrateConstructor = <T extends Instances[keyof Instances]>(
+	scope: Scope<unknown>,
+	instance: T,
+) => (propertyTable: PropertyTable<T>) => T
+
 export type NewConstructor = <T extends keyof CreatableInstances>(
 	scope: Scope<unknown>,
 	className: T,
 ) => (propertyTable: PropertyTable<CreatableInstances[T]>) => CreatableInstances[T]
 
 export type NewJSXConstructor = (element: JSX.ElementType, props: defined, children: Child) => Instance
-
-export type HydrateConstructor = <T extends Instances[keyof Instances]>(
-	scope: Scope<unknown>,
-	instance: T,
-) => (propertyTable: PropertyTable<T>) => T
 
 // elttob will be proud
 
@@ -270,8 +270,8 @@ export type ScopedConstructor = <Methods extends object[]>(
 export type Hotfusion = {
 	version: Version
 	Contextual: ContextualConstructor
+	constructorsOf: ConstructorsOfConstructor
 	Safe: SafeConstructor
-	methodsOf: MethodsOfConstructor
 
 	doCleanup: (task: Task) => void
 	scoped: ScopedConstructor
@@ -279,6 +279,7 @@ export type Hotfusion = {
 	queueScope: <T extends Task[]>(scope: Scope<unknown>, ...tasks: T) => LuaTuple<T>
 	innerScope: DeriveScopeConstructor
 
+	expect: Use
 	peek: Use
 	Value: ValueConstructor
 	Computed: ComputedConstructor
@@ -301,6 +302,26 @@ export type Hotfusion = {
 	Attribute: (attributeName: string) => SpecialKey
 	AttributeChange: (attributeName: string) => SpecialKey
 	AttributeOut: (attributeName: string) => SpecialKey
+}
+
+/** This preserves generics and omits non-scoped constructors */
+export type Constructors = {
+	Computed: <T>(callback: (use: Use, scope: Scope<object>) => T) => Computed<T>
+	Value: <T>(initialValue: T) => LuaTuple<[Value<T, any>, ValueSetter]>
+	ForKeys: <KI, KO, V>(
+		inputTable: UsedAs<Map<KI, V>>,
+		processor: (use: Use, scope: Scope<object>, key: KI) => KO,
+	) => For<KO, V>
+	ForPairs: <KI, KO, VI, VO>(
+		inputTable: UsedAs<Map<KI, VI>>,
+		processor: (use: Use, scope: Scope<object>, key: KI, value: VI) => LuaTuple<[KO, VO]>,
+	) => For<KO, VO>
+	ForValues: <K, VI, VO>(
+		inputTable: UsedAs<Map<K, VI>>,
+		processor: (use: Use, scope: Scope<object>, value: VI) => VO,
+	) => For<K, VO>
+	Tween: <T>(goalState: UsedAs<T>, tweenInfo?: UsedAs<TweenInfo>) => Tween<T>
+	Spring: <T>(goalState: UsedAs<T>, speed?: UsedAs<number>, damping?: UsedAs<number>) => Spring<T>
 }
 
 export type ExternalProvider = {

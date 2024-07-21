@@ -38,7 +38,7 @@ end
 	As long as there is at least one active change listener, this Observer
 	will be held in memory, preventing GC, so disconnecting is important.
 ]]
-function class:listen(
+function class:onChange(
 	callback: () -> ()
 ): () -> ()
 	local self = self :: InternalTypes.Observer
@@ -50,32 +50,30 @@ function class:listen(
 end
 
 --[[
-	Similar to `class:listen()`, however it runs the provided callback
-	once.
+	Similar to `class:onBind()`, however it runs the provided callback
+	immediately.
 ]]
-function class:once(
+function class:onBind(
 	callback: () -> ()
 ): () -> ()
 	local self = self :: InternalTypes.Observer
 	External.doTaskImmediate(callback)
+	return self:onChange(callback)
+end
+
+--[[
+	Similar to `class:onChange()`, however it runs the provided callback once.
+]]
+function class:onlyOnce(
+	callback: () -> ()
+): () -> ()
+	local self = self :: InternalTypes.Observer
 	local disconnect: () -> ()
-	disconnect = self:listen(function()
+	disconnect = self:onChange(function()
 		disconnect()
 		callback()
 	end)
 	return disconnect
-end
-
---[[
-	Similar to `class:listen()`, however it runs the provided callback
-	immediately.
-]]
-function class:subscribe(
-	callback: () -> ()
-): () -> ()
-	local self = self :: InternalTypes.Observer
-	External.doTaskImmediate(callback)
-	return self:listen(callback)
 end
 
 local function Observer(

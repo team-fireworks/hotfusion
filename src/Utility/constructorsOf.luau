@@ -15,7 +15,7 @@ local task = nil -- Disable usage of Roblox's task scheduler
 local Package = script.Parent.Parent
 local Types = require(Package.Types)
 
-local function methodsOf(
+local function constructorsOf(
 	scope: Types.Scope<unknown>,
 	target: {[unknown]: unknown}
 ): {[unknown]: unknown}
@@ -33,4 +33,4 @@ local function methodsOf(
 	return methods
 end
 
-return methodsOf
+return constructorsOf

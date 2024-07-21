@@ -106,13 +106,13 @@ export type Use = <T>(target: UsedAs<T>) -> T
 -- A state object whose value can be set at any time by the user.
 export type Value<T, S = T> = StateObject<T> & {
 	kind: "State",
-	set: (Value<T, S>, newValue: S, force: boolean?) -> S,
 	____phantom_setType: (never) -> S -- phantom data so this contains a T
 }
+export type ValueSetter = <S>(newValue: S, force: boolean?) -> S
 export type ValueConstructor = <T>(
 	scope: Scope<unknown>,
 	initialValue: T
-) -> Value<T, any>
+) -> (Value<T, any>, ValueSetter)
 
 -- A state object whose value is derived from other objects using a callback.
 export type Computed<T> = StateObject<T> & Dependent & {
@@ -146,9 +146,9 @@ export type ForValuesConstructor =  <K, VI, VO, S>(
 -- An object which can listen for updates on another state object.
 export type Observer = Dependent & {
 	type: "Observer",
-	listen: (Observer, callback: () -> ()) -> (() -> ()),
-	once: (Observer, callback: () -> ()) -> (() -> ()),
-	subscribe: (Observer, callback: () -> ()) -> (() -> ())
+	onChange: (Observer, callback: () -> ()) -> (() -> ()),
+	onBind: (Observer, callback: () -> ()) -> (() -> ()),
+	onlyOnce: (Observer, callback: () -> ()) -> (() -> ())
 }
 export type ObserverConstructor = (
 	scope: Scope<unknown>,
@@ -250,7 +250,7 @@ export type ScopedConstructor = (() -> Scope<{}>)
 	& (<A, B, C, D, E, F, G, H, I, J, K>(A & {}, B & {}, C & {}, D & {}, E & {}, F & {}, G & {}, H & {}, I & {}, J & {}, K & {}) -> Scope<A & B & C & D & E & F & G & H & I & J & K>)
 	& (<A, B, C, D, E, F, G, H, I, J, K, L>(A & {}, B & {}, C & {}, D & {}, E & {}, F & {}, G & {}, H & {}, I & {}, J & {}, K & {}, L & {}) -> Scope<A & B & C & D & E & F & G & H & I & J & K & L>)
 
-export type MethodsOfConstructor = (
+export type ConstructorsOfConstructor = (
 	scope: Scope<unknown>,
 	target: {[unknown]: unknown}
 ) -> {[unknown]: unknown}
@@ -265,8 +265,8 @@ export type SafeConstructor = <Success, Fail>(
 export type Hotfusion = {
 	version: Version,
 	Contextual: ContextualConstructor,
+	ctorsOf: ConstructorsOfConstructor,
 	Safe: SafeConstructor,
-	methodsOf: MethodsOfConstructor,
 
 	doCleanup: (task: Task) -> (),
 	scoped: ScopedConstructor,
@@ -274,7 +274,7 @@ export type Hotfusion = {
 	queueScope: <T...>(scope: Scope<unknown>, T...) -> T...,
 	innerScope: DeriveScopeConstructor,
 
-	await: Use,
+	expect: Use,
 	peek: Use,
 	Value: ValueConstructor,
 	Computed: ComputedConstructor,

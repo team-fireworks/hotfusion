@@ -16,7 +16,7 @@ local InternalTypes = require(Package.InternalTypes)
 local Observer = require(Package.State.Observer)
 local isState = require(Package.State.isState)
 
-local function await<T>(
+local function expect<T>(
 	target: Types.UsedAs<T>
 ): T
 	if not isState(target) then
@@ -25,7 +25,7 @@ local function await<T>(
 	local awaiting = target :: InternalTypes.StateObject<T>
 	local runningThread = coroutine.running()
 	local scope = awaiting.scope :: Types.Scope<unknown>
-	Observer(scope, awaiting):once(function()
+	Observer(scope, awaiting):onlyOnce(function()
 		External.doTaskImmediate(function()
 			coroutine.resume(runningThread, awaiting:_peek())
 		end)
@@ -33,4 +33,4 @@ local function await<T>(
 	return coroutine.yield()
 end
 
-return await
+return expect

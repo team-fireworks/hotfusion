@@ -5,7 +5,6 @@ local task = nil -- Disable usage of Roblox's task scheduler
 
 --[[
 	Stores templates for different kinds of logging messages.
-	TEAM FIREWORKS DEVIATION: add seperation for hotfusion errors
 ]]
 
 return {
@@ -48,6 +47,8 @@ return {
 		useAfterDestroy = "%s is no longer valid - it was destroyed before %s. See discussion #292 on GitHub for advice."
 	},
 	Hotfusion = {
-		queuedTwice = "Attempted to queue a task for destruction multiple times."
+		missingSpecialKeyValue = "Special key %s needs a value, but none was provided. Provide one with `%s:myValue={...}`.",
+		queuedTwice = "Attempted to queue a task for destruction multiple times.",
+		valueGetWasRemoved = "`Value:set()` has been deprecated. Capture the setter as a second return value from the constructor instead (e.g. `local value, setValue = Value(\"Foo\")`).",
 	}
 }

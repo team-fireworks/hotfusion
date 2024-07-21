@@ -24,9 +24,9 @@ local function formatError(
 	local originalMessageID = messageID
 	local error: Types.Error? = if typeof(errorOrTrace) == "table" then errorOrTrace else nil
 	local trace: string? = if typeof(errorOrTrace) == "table" then errorOrTrace.trace else errorOrTrace
-	local fusionMessage, hotfusionMessage = messages.Fusion[messageID], messages.Fusion[messageID]
-	local messageText = fusionMessage or hotfusionMessage
-	if not fusionMessage or not hotfusionMessage then
+	local isFusion = messages.Fusion[messageID] ~= nil
+	local messageText = messages.Fusion[messageID] or messages.Hotfusion[messageID]
+	if not messageText then
 		messageID = "unknownMessage"
 		messageText = messages.Fusion[messageID]
 	end
@@ -39,9 +39,9 @@ local function formatError(
 	else
 		messageText = messageText:gsub("ERROR_MESSAGE", originalMessageID)
 	end
-	messageText = `[{fusionMessage and "Fusion" or "Hotfusion"}] {messageText} \nID: {messageID}`
+	messageText = `[{isFusion and "Fusion" or "Hotfusion"}] {messageText} \nID: {messageID}`
 	if externalProvider ~= nil and externalProvider.policies.allowWebLinks then
-		messageText ..= `\nLearn more: {fusionMessage and FUSION_ERROR_URL or HOTFUSION_ERROR_URL}{messageID:lower()}`
+		messageText ..= `\nLearn more: {isFusion and FUSION_ERROR_URL or HOTFUSION_ERROR_URL}{messageID:lower()}`
 	end
 	if trace ~= nil then
 		messageText ..= ` \n---- Stack trace ----\n{trace}`

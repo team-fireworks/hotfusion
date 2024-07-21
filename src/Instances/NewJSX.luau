@@ -13,6 +13,7 @@ local task = nil -- Disable usage of Roblox's task scheduler
 local Package = script.Parent.Parent
 local Types = require(Package.Types)
 local External = require(Package.External)
+-- Instances
 local Attribute = require(Package.Instances.Attribute)
 local AttributeChange = require(Package.Instances.AttributeChange)
 local AttributeOut = require(Package.Instances.AttributeOut)
@@ -22,12 +23,14 @@ local OnEvent = require(Package.Instances.OnEvent)
 local Out = require(Package.Instances.Out)
 local applyInstanceProps = require(Package.Instances.applyInstanceProps)
 local defaultProps = require(Package.Instances.defaultProps)
+local classNames = require(Package.Instances.classNames)
+-- Utility
 local xtypeof = require(Package.Utility.xtypeof)
 
 type Component = (scope: Types.Scope<unknown>, ...unknown) -> Instance
 type MaybeSpecialKey = Types.SpecialKey | (string) -> Types.SpecialKey
 
-local SPECIAL_KEY_LOOKUP: {[string]: MaybeSpecialKey} = {
+local SPECIAL_KEYS: {[string]: MaybeSpecialKey} = {
 	Attribute = Attribute,
 	AttributeChange = AttributeChange,
 	AttributeOut = AttributeOut,
@@ -44,15 +47,17 @@ local function NewJSX(
 ): Instance
 	local scope = props.Scope :: Types.Scope<unknown>
 	if scope == nil then
-		External.logError("scopeMissing", nil, "instances using Markup", `myScope:Markup({tostring(component)}, \{ ... })`)
+		External.logError("scopeMissing", nil, "instances using JSX-style New", `<textlabel Scope=\{ myScope }/>`)
 	end
+
 	if typeof(component) == "function" then
 		return component(scope, props)
 	end
-	local className = component:sub(1, 1):upper() .. component:sub(2)
+
+	local className = classNames[component]
 	local ok, instance = pcall(Instance.new, className)
 	if not ok then
-		External.logError("cannotCreateClass", nil, className)
+		External.logError("cannotCreateClass", nil, component)
 	end
 
 	local appliedProps: Types.PropertyTable = defaultProps[className] or {}
@@ -61,25 +66,42 @@ local function NewJSX(
 			return External.logError("unrecognisedPropertyKey", nil, xtypeof(name))
 		end
 
-		local colon = string.find(name, ":")
-		local specialKey = colon and string.sub(name, 1, colon - 1)
-		local specialValue: string = colon and string.sub(name, colon + 1) :: any
-
-		local newKey: Types.SpecialKey?
-		local impl = SPECIAL_KEY_LOOKUP[specialKey :: any]
-		if impl then
-			newKey =
-				if typeof(impl) == "function" then
-					impl(specialValue)
-				else 
-					impl
-		end
-
-		if newKey then
-			appliedProps[newKey] = value
+		if SPECIAL_KEYS[name] then
+			local impl = SPECIAL_KEYS[name] :: Types.SpecialKey
+			if typeof(impl) == "function" then
+				External.logError("missingSpecialKeyValue", nil, name, name)
+			end
+			appliedProps[impl] = value
 			continue
 		end
+		
+		local seperator = string.find(name, ":")
+		if seperator then
+			local implName = string.sub(name, 1, seperator - 1)
+			local impl = SPECIAL_KEYS[implName] :: (unknown) -> Types.SpecialKey
+			if impl then
+				appliedProps[impl(string.sub(name, seperator + 1))] = value
+				continue
+			end
+		end
+
 		appliedProps[name] = value
+	end
+
+	-- TODO: typeguard this
+	if props.Uses then
+		local uses = props.Uses :: {}
+		if #uses == 2 then
+			local specialKey, value = uses[1], uses[2]
+			if typeof(specialKey) == "table" and specialKey.type == "SpecialKey" then
+				appliedProps[specialKey] = value
+			end
+		else
+			for _, pair in pairs(uses) do
+				local specialKey, value = pair[1], pair[2]
+				appliedProps[specialKey] = value
+			end
+		end
 	end
 
 	table.insert(scope, instance)

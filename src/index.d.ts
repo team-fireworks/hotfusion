@@ -3,11 +3,14 @@ import * as Types from "./Types"
 /**
  * The entry point to the Fusion library.
  */
+export = Hotfusion
+export as namespace Hotfusion
 declare namespace Hotfusion {
 	export type Animatable = Types.Animatable
 	export type UsedAs<T> = Types.UsedAs<T>
 	export type Child = Types.Child
 	export type Computed<T> = Types.Computed<T>
+	export type Constructors = Types.Constructors
 	export type Contextual<T> = Types.Contextual<T>
 	export type Dependency = Types.Dependency
 	export type Dependent = Types.Dependent
@@ -28,8 +31,8 @@ declare namespace Hotfusion {
 	/* General */
 	export const version: Version
 	export const Contextual: Types.ContextualConstructor
+	export const ctorsOf: Types.ConstructorsOfConstructor
 	export const Safe: Types.SafeConstructor
-	export const methodsOf: Types.MethodsOfConstructor
 
 	/* Memory */
 	/** @deprecated use `doCleanup()` instead */
@@ -41,7 +44,7 @@ declare namespace Hotfusion {
 	export const scoped: Types.ScopedConstructor
 
 	/* State */
-	export const await: Use
+	export const expect: Types.Use
 	export const Computed: Types.ComputedConstructor
 	export const ForKeys: Types.ForKeysConstructor
 	export const ForPairs: Types.ForPairsConstructor
@@ -57,8 +60,8 @@ declare namespace Hotfusion {
 	export const Child: (child: Child[]) => Child
 	export const Children: Types.Children
 	export const Hydrate: Types.HydrateConstructor
-	export const NewJSX: Types.NewJSXConstructor
 	export const New: Types.NewConstructor
+	export const NewJSX: Types.NewJSXConstructor
 	export const OnChange: <T extends string>(propertyName: T) => Types.OnChangeKey<T>
 	export const OnEvent: <T extends string>(eventName: T) => Types.OnEventKey<T>
 	export const Out: <T extends string>(propertyName: T) => Types.OutKey<T>
@@ -67,5 +70,3 @@ declare namespace Hotfusion {
 	export const Tween: Types.TweenConstructor
 	export const Spring: Types.SpringConstructor
 }
-
-export = Hotfusion
