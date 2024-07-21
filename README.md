@@ -16,7 +16,7 @@ The following are changes from upstream:
 - Implements a bevy of built-in utilities:
   - `expect(watching)` yields the current running thread until the given state
     object changes, effectively a yielding Use callback
-  - `methodsOf(scope, constructors)` allows silently passing in a scope
+  - `ctorsOf(scope, constructors)` allows silently passing in a scope
     parameter, hugely useful for the Roblox TypeScript world as you cannot
     specify a callback nor a method
   - `queueScope(...Task)` allows queuing tasks to a scope. We find this far more
@@ -141,6 +141,7 @@ const OnHover: SpecialKey = {
 return (
   <frame>
     <textbutton Uses={[OnHover, true]} />
+    // or
     <textbutton
       Uses={[
         [OnEvent("Activated"), () => print("clicked")],
@@ -165,8 +166,8 @@ Fusion 0.3 employs a greater focus on manual memory management via the use of
 scopes. You'd use constructors as methods on a scope.
 
 Working with scopes in roblox-ts can be cumbersome, as you will often be passing
-in the scope directly. Hotfusion provides the `methodsOf` function to make
-scoped constructors less verbose.
+in the scope directly. Hotfusion provides the `ctorsOf` function to make scoped
+constructors less verbose.
 
 Pass in a table of constructors, and Hotfusion will omit the first `scope`
 parameter for you. Under the hood, Hotfusion will pass the scope directly to the
@@ -185,7 +186,7 @@ const message = Computed((use) => `i LOVE ${use(lib)}!!`)
 ```
 
 > [!WARNING]
-> [Typescript fumbles with inferring function generics](https://stackoverflow.com/questions/64948037/generics-type-loss-while-infering). As such, constructors emitted by `methodsOf`
+> [Typescript fumbles with inferring function generics](https://stackoverflow.com/questions/64948037/generics-type-loss-while-infering). As such, constructors emitted by `ctorsOf`
 > loses its generics, becoming `unknown`.
 >
 > You will see this if you try to use a Hotfusion constructor:
@@ -201,7 +202,7 @@ const message = Computed((use) => `i LOVE ${use(lib)}!!`)
 > result of `ctorsOf` to the `Constructors` type:
 >
 > ```ts
-> const {Computed} = ctorsOf(scope, Hotfusion) as BuiltinConstructors
+> const {Computed} = ctorsOf(scope, Hotfusion) as Constructors
 > //     ^^^^^^^^
 > //     correctly inferred as <T, S>(processor: (use: Use, scope: S) => T): Computed<T>
 > ```
@@ -211,7 +212,7 @@ const message = Computed((use) => `i LOVE ${use(lib)}!!`)
 ### invalidOutType
 
 ```txt
-[Out] properties must be given a Value setter function. Value objects differs from Fusion - see Hotfusion README.",
+[Out] properties must be given a Value setter function. Value objects differs from Fusion - see Hotfusion README.
 ```
 
 **Thrown by:** `Out`, `New`, `NewJSX`
