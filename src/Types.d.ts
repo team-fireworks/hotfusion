@@ -32,13 +32,13 @@ export type Task =
 	| Instance
 	| Callback
 	| RBXScriptConnection
-	| {Connected: boolean; Disconnect(): void}
+	| { Connected: boolean; Disconnect(): void }
 	| thread
 	| Promise<unknown>
-	| {destroy(): void}
-	| {Destroy(): void}
-	| {disconnect(): void}
-	| {Disconnect(): void}
+	| { destroy(): void }
+	| { Destroy(): void }
+	| { disconnect(): void }
+	| { Disconnect(): void }
 	| Task[]
 
 /** A scope of tasks to clean up. */
