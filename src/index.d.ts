@@ -45,6 +45,7 @@ declare namespace Hotfusion {
 
 	/* State */
 	export const expect: Types.Use
+	export const flatten: Types.Flatten
 	export const Computed: Types.ComputedConstructor
 	export const ForKeys: Types.ForKeysConstructor
 	export const ForPairs: Types.ForPairsConstructor
