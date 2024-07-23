@@ -79,20 +79,20 @@ export type ConstructorsOfConstructor = <Constructors extends object>(
 	scope: Scope<unknown>,
 	constructors: Constructors,
 ) => {
-	[key in keyof Constructors]: Constructors[key] extends (scope: Scope<unknown>, ...args: infer P) => infer R
+	[K in keyof Constructors]: Constructors[K] extends (scope: Scope<unknown>, ...args: infer P) => infer R
 		? (...args: P) => R
-		: Constructors[key]
+		: Constructors[K]
 }
 
 /** A graph object which can have dependents. */
 export interface Dependency extends ScopedObject {
-	dependentSet: Map<Dependent, unknown>
+	dependentSet: Set<Dependent>
 }
 
 /** A graph object which can have dependencies. */
 export interface Dependent extends ScopedObject {
 	update(): boolean
-	dependencySet: Map<Dependency, unknown>
+	dependencySet: Set<Dependency>
 }
 
 /** An object which stores a piece of reactive state. */
@@ -259,17 +259,17 @@ export type DeriveScopeConstructor = <Existing extends Scope<unknown>, AddMethod
 	existing: Existing,
 	...addMethods: AddMethods
 ) => Scope<{
-	[Key in keyof Existing | keyof AddMethods[number]]: Key extends keyof Existing
-		? Existing[Key]
-		: Key extends keyof AddMethods[number]
-			? AddMethods[number][Key]
+	[K in keyof Existing | keyof AddMethods[number]]: K extends keyof Existing
+		? Existing[K]
+		: K extends keyof AddMethods[number]
+			? AddMethods[number][K]
 			: never
 }>
 
 export type ScopedConstructor = <Methods extends object[]>(
 	...methods: Methods
 ) => Scope<{
-	[Key in keyof Methods[number]]: Methods[number][Key]
+	[K in keyof Methods[number]]: Methods[number][K]
 }>
 
 export type Hotfusion = {
@@ -285,6 +285,7 @@ export type Hotfusion = {
 	innerScope: DeriveScopeConstructor
 
 	expect: Use
+	flatten: Flatten
 	peek: Use
 	Value: ValueConstructor
 	Computed: ComputedConstructor
@@ -325,11 +326,15 @@ export type Constructors = {
 		inputTable: UsedAs<Map<K, VI>>,
 		processor: (use: Use, scope: Scope<object>, value: VI) => VO,
 	) => For<K, VO>
+	Hydrate: <T extends Instances[keyof Instances]>(instance: T) => (propertyTable: PropertyTable<T>) => T
+	New: <T extends keyof CreatableInstances>(
+		className: T,
+	) => (propertyTable: PropertyTable<CreatableInstances[T]>) => CreatableInstances[T]
 	Tween: <T>(goalState: UsedAs<T>, tweenInfo?: UsedAs<TweenInfo>) => Tween<T>
 	Spring: <T>(goalState: UsedAs<T>, speed?: UsedAs<number>, damping?: UsedAs<number>) => Spring<T>
 }
 
-export type ExternalProvider = {
+export interface ExternalProvider {
 	policies: {
 		allowWebLinks: boolean
 	}
