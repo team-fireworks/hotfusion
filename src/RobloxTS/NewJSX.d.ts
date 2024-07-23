@@ -1,12 +1,23 @@
 // https://github.com/Dionysusnu/Fusion/blob/jsx/src/Instances/jsx.d.ts
-import {Child, Children, OnChangeKey, OnEventKey, OutKey, Scope, SpecialKey, UsedAs, Value, ValueSetter} from "../Types"
+import {
+	Child,
+	Children,
+	OnChangeKey,
+	OnEventKey,
+	OutKey,
+	Scope,
+	SpecialKey,
+	UsedAs,
+	Value,
+	ValueSetter,
+} from "../Types"
 
 declare global {
 	namespace JSX {
 		// FIXME: allowing [unknown]: unknown for now to allow special keys but
 		// we rly should fix this later
 		type JsxPropertyTable<T extends Instance> = {
-			Scope: Scope<unknown>
+			scope: Scope<unknown>
 		} & Partial<
 			{
 				Uses: [SpecialKey, unknown] | Array<[SpecialKey, unknown]>
@@ -27,7 +38,9 @@ declare global {
 		>
 
 		// eslint-disable-next-line @typescript-eslint/no-unused-vars
-		type LibraryManagedAttributes<T, A> = A extends {[K in Children]: unknown} ? A : A & {[K in Children]?: never}
+		type LibraryManagedAttributes<T, A> = A extends { [K in Children]: unknown }
+			? A
+			: A & { [K in Children]?: never }
 
 		type Component = (scope: Scope<unknown>, props: Record<string, unknown>) => Element
 		type ElementType = string | Component
@@ -308,5 +321,5 @@ declare global {
 	}
 }
 
-declare function NewJSX(element: JSX.ElementType, props: {[K in string]: unknown}, children: Child): Instance
+declare function NewJSX(element: JSX.ElementType, props: { [K in string]: unknown }, children: Child): Instance
 export = NewJSX

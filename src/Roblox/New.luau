@@ -11,8 +11,8 @@ local task = nil -- Disable usage of Roblox's task scheduler
 local Package = script.Parent.Parent
 local Types = require(Package.Types)
 local External = require(Package.External)
-local defaultProps = require(Package.Instances.defaultProps)
-local applyInstanceProps = require(Package.Instances.applyInstanceProps)
+local defaultProps = require(Package.Roblox.defaultProps)
+local applyInstanceProps = require(Package.Roblox.applyInstanceProps)
 
 local function New(scope: Types.Scope<unknown>, className: string)
 	if (className :: any) == nil then

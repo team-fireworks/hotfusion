@@ -14,16 +14,17 @@ local Package = script.Parent.Parent
 local Types = require(Package.Types)
 local External = require(Package.External)
 -- Instances
-local Attribute = require(Package.Instances.Attribute)
-local AttributeChange = require(Package.Instances.AttributeChange)
-local AttributeOut = require(Package.Instances.AttributeOut)
-local Children = require(Package.Instances.Children)
-local OnChange = require(Package.Instances.OnChange)
-local OnEvent = require(Package.Instances.OnEvent)
-local Out = require(Package.Instances.Out)
-local applyInstanceProps = require(Package.Instances.applyInstanceProps)
-local defaultProps = require(Package.Instances.defaultProps)
-local classNames = require(Package.Instances.classNames)
+local Attribute = require(Package.Roblox.Attribute)
+local AttributeChange = require(Package.Roblox.AttributeChange)
+local AttributeOut = require(Package.Roblox.AttributeOut)
+local Children = require(Package.Roblox.Children)
+local OnChange = require(Package.Roblox.OnChange)
+local OnEvent = require(Package.Roblox.OnEvent)
+local Out = require(Package.Roblox.Out)
+local applyInstanceProps = require(Package.Roblox.applyInstanceProps)
+local defaultProps = require(Package.Roblox.defaultProps)
+-- RobloxTS
+local classNames = require(Package.RobloxTS.classNames)
 -- Utility
 local xtypeof = require(Package.Utility.xtypeof)
 
@@ -41,9 +42,9 @@ local SPECIAL_KEYS: { [string]: MaybeSpecialKey } = {
 }
 
 local function NewJSX(component: string | Component, props: { [string]: unknown }, ...: Types.Child): Instance
-	local scope = props.Scope :: Types.Scope<unknown>
+	local scope = props.scope :: Types.Scope<unknown>
 	if scope == nil then
-		External.logError("scopeMissing", nil, "instances using JSX-style New", `<textlabel Scope=\{ myScope }/>`)
+		External.logError("scopeMissing", nil, "instances using JSX-style New", `<textlabel scope=\{myScope}/>`)
 	end
 
 	if typeof(component) == "function" then

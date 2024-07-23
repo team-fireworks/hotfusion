@@ -9,7 +9,7 @@ local task = nil -- Disable usage of Roblox's task scheduler
 ]]
 
 local Package = script.Parent.Parent
-local Oklab = require(Package.Colour.Oklab)
+local Oklab = require(Package.Animation.Oklab)
 
 local function unpackType(value: unknown, typeString: string): { number }
 	if typeString == "number" then

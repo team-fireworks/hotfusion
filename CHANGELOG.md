@@ -9,7 +9,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- `flatten()` utility to flatten the `T` from a `UsedAs<T>` object
+- Added Components API, with two new built-ins: `Show` for showing a component
+  based on truthiness, and `Switch` for matching a component with a target value
+- Added `flatten()` utility to flatten the `T` from a `UsedAs<T>` object
+
+### Changed
+
+- Reorganized the Fusion namespace
+  - `Contextual` has been moved to State
+  - `Safe` has been moved to Components
+  - `NewJSX` and `ctorsOf` moved to dedicated RobloxTS API
+  - Merged Colour with Animation
+  - Expanded the External folder, down the line a dedicated Std API will suffice
+  
+### Fixed
+
+- Fixed `[AttributeOut]` requiring a `Value` object
 
 ## 0.3-hotfusion.1
 

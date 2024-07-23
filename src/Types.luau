@@ -262,10 +262,31 @@ export type SafeConstructor = <Success, Fail>(
 	}
 ) -> Success | Fail
 
+export type ShowConstructor = (<T, S>(
+	scope: Scope<S>,
+	props: {
+		when: UsedAs<any>,
+		component: (Use, Scope<S>) -> T,
+	}
+) -> StateObject<T?>) & <Component, Fallback, S>(
+	scope: Scope<S>,
+	props: {
+		when: UsedAs<any>,
+		component: (Use, Scope<S>) -> Component,
+		fallback: (Use, Scope<S>) -> Fallback,
+	}
+) -> StateObject<Component | Fallback>
+
+export type SwitchConstructor = <TI, TO, S>(
+	scope: Scope<S>,
+	target: UsedAs<TI>
+) -> (cases: {
+	[TI]: (Use, Scope<S>) -> TO,
+	_: ((Use, Scope<S>) -> TO)?,
+}) -> StateObject<TO?>
+
 export type Hotfusion = {
 	version: Version,
-	Contextual: ContextualConstructor,
-	ctorsOf: ConstructorsOfConstructor,
 	Safe: SafeConstructor,
 
 	doCleanup: (task: Task) -> (),
@@ -279,26 +300,31 @@ export type Hotfusion = {
 	flatten: Flatten,
 	Value: ValueConstructor,
 	Computed: ComputedConstructor,
+	Contextual: ContextualConstructor,
 	ForPairs: ForPairsConstructor,
 	ForKeys: ForKeysConstructor,
 	ForValues: ForValuesConstructor,
 	Observer: ObserverConstructor,
 
-	Tween: TweenConstructor,
-	Spring: SpringConstructor,
+	Show: ShowConstructor,
+	Switch: SwitchConstructor,
 
-	New: NewConstructor,
 	NewJSX: NewJSXConstructor,
-	Hydrate: HydrateConstructor,
+	ctorsOf: ConstructorsOfConstructor,
 
-	Child: (x: { Child }) -> Child,
-	Children: SpecialKey,
-	Out: (propertyName: string) -> SpecialKey,
-	OnEvent: (eventName: string) -> SpecialKey,
-	OnChange: (propertyName: string) -> SpecialKey,
 	Attribute: (attributeName: string) -> SpecialKey,
 	AttributeChange: (attributeName: string) -> SpecialKey,
 	AttributeOut: (attributeName: string) -> SpecialKey,
+	Child: (x: { Child }) -> Child,
+	Children: SpecialKey,
+	Hydrate: HydrateConstructor,
+	New: NewConstructor,
+	Out: (propertyName: string) -> SpecialKey,
+	OnEvent: (eventName: string) -> SpecialKey,
+	OnChange: (propertyName: string) -> SpecialKey,
+
+	Tween: TweenConstructor,
+	Spring: SpringConstructor,
 }
 
 export type ExternalProvider = {

@@ -19,7 +19,6 @@ return {
 		destructorRedundant = "%s destructors no longer do anything. If you wish to run code on destroy, `table.insert` a function into the `scope` argument. See discussion #292 on GitHub for advice.",
 		forKeyCollision = "The key '%s' was returned multiple times simultaneously, which is not allowed in `For` objects.",
 		invalidAttributeChangeHandler = "The change handler for the '%s' attribute must be a function.",
-		invalidAttributeOutType = "[AttributeOut] properties must be given Value objects.",
 		invalidChangeHandler = "The change handler for the '%s' property must be a function.",
 		invalidEventHandler = "The handler for the '%s' event must be a function.",
 		invalidOutProperty = "The %s class doesn't have a property called '%s'.",
@@ -46,6 +45,7 @@ return {
 		useAfterDestroy = "%s is no longer valid - it was destroyed before %s. See discussion #292 on GitHub for advice.",
 	},
 	Hotfusion = {
+		invalidAttributeOutType = "[AttributeOut] properties must be given a Value setter function. Value objects differs from Fusion - see Hotfusion README.",
 		invalidOutType = "[Out] properties must be given a Value setter function. Value objects differs from Fusion - see Hotfusion README.",
 		missingSpecialKeyValue = "Special key %s needs a value, but none was provided. Provide one with `%s:myValue={...}`.",
 		queuedTwice = "Attempted to queue a task for destruction multiple times.",

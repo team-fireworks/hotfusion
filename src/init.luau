@@ -34,19 +34,15 @@ export type Version = Types.Version
 do
 	-- selene: allow(global_usage)
 	if _G.UTIL_TARGET == "roblox" or typeof(script) == "Instance" then
-		External.setExternalProvider(require(script.External.RobloxExternal))
+		External.setExternalProvider(require(script.RobloxExternal))
 	end
 	if string.sub(_VERSION, 1, 5):lower() == "lune " then
-		External.setExternalProvider(require(script.External.LuneExternal))
+		External.setExternalProvider(require(script.LuneExternal))
 	end
 end
 
 local Hotfusion: Types.Hotfusion = table.freeze({
-	-- General
 	version = { major = 0, minor = 3, isRelease = false },
-	Contextual = require(script.Utility.Contextual),
-	ctorsOf = require(script.Utility.constructorsOf),
-	Safe = require(script.Utility.Safe),
 
 	-- Memory
 	cleanup = require(script.Memory.legacyCleanup),
@@ -60,6 +56,7 @@ local Hotfusion: Types.Hotfusion = table.freeze({
 	expect = require(script.State.expect),
 	flatten = require(script.State.flatten) :: Types.Flatten,
 	Computed = require(script.State.Computed),
+	Contextual = require(script.State.Contextual),
 	ForKeys = require(script.State.ForKeys) :: Types.ForKeysConstructor,
 	ForPairs = require(script.State.ForPairs) :: Types.ForPairsConstructor,
 	ForValues = require(script.State.ForValues) :: Types.ForValuesConstructor,
@@ -67,18 +64,26 @@ local Hotfusion: Types.Hotfusion = table.freeze({
 	peek = require(script.State.peek),
 	Value = require(script.State.Value),
 
-	-- Roblox API
-	Attribute = require(script.Instances.Attribute),
-	AttributeChange = require(script.Instances.AttributeChange),
-	AttributeOut = require(script.Instances.AttributeOut),
-	Child = require(script.Instances.Child),
-	Children = require(script.Instances.Children),
-	Hydrate = require(script.Instances.Hydrate),
-	NewJSX = require(script.Instances.NewJSX) :: Types.NewJSXConstructor,
-	New = require(script.Instances.New),
-	OnChange = require(script.Instances.OnChange),
-	OnEvent = require(script.Instances.OnEvent),
-	Out = require(script.Instances.Out),
+	-- Components
+	Safe = require(script.Components.Safe),
+	Show = require(script.Components.Show) :: Types.ShowConstructor,
+	Switch = require(script.Components.Switch),
+
+	-- Roblox
+	Attribute = require(script.Roblox.Attribute),
+	AttributeChange = require(script.Roblox.AttributeChange),
+	AttributeOut = require(script.Roblox.AttributeOut),
+	Child = require(script.Roblox.Child),
+	Children = require(script.Roblox.Children),
+	Hydrate = require(script.Roblox.Hydrate),
+	New = require(script.Roblox.New),
+	OnChange = require(script.Roblox.OnChange),
+	OnEvent = require(script.Roblox.OnEvent),
+	Out = require(script.Roblox.Out),
+
+	-- RobloxTS
+	NewJSX = require(script.RobloxTS.NewJSX) :: Types.NewJSXConstructor,
+	ctorsOf = require(script.RobloxTS.ctorsOf),
 
 	-- Animation
 	Tween = require(script.Animation.Tween),
