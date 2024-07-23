@@ -35,11 +35,11 @@ Install this fork with your preferred package manager of choice:
 
 ```bash
 # Wally
-wally add znotfireman/hotfusion
+wally add @znotfireman/hotfusion
 # npm
-npm i rbxts/hotfusion
+npm i @rbxts/hotfusion
 # pnpm
-pnpm i rbxts/hotfusion
+pnpm i @rbxts/hotfusion
 ```
 
 ## JSX
