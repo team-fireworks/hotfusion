@@ -15,15 +15,15 @@ return function()
 
 	it("should assign single children to instances", function()
 		local expect = getfenv().expect
-		
+
 		local scope = {}
-		local ins = New(scope, "Folder") {
+		local ins = New(scope, "Folder")({
 			Name = "Bob",
 
-			[Children] = New(scope, "Folder") {
-				Name = "Fred"
-			}
-		}
+			[Children] = New(scope, "Folder")({
+				Name = "Fred",
+			}),
+		})
 
 		expect(ins:FindFirstChild("Fred")).to.be.ok()
 		doCleanup(scope)
@@ -31,23 +31,23 @@ return function()
 
 	it("should assign multiple children to instances", function()
 		local expect = getfenv().expect
-		
+
 		local scope = {}
-		local ins = New(scope, "Folder") {
+		local ins = New(scope, "Folder")({
 			Name = "Bob",
 
 			[Children] = {
-				New(scope, "Folder") {
-					Name = "Fred"
-				},
-				New(scope, "Folder") {
-					Name = "George"
-				},
-				New(scope, "Folder") {
-					Name = "Harry"
-				}
-			}
-		}
+				New(scope, "Folder")({
+					Name = "Fred",
+				}),
+				New(scope, "Folder")({
+					Name = "George",
+				}),
+				New(scope, "Folder")({
+					Name = "Harry",
+				}),
+			},
+		})
 
 		expect(ins:FindFirstChild("Fred")).to.be.ok()
 		expect(ins:FindFirstChild("George")).to.be.ok()
@@ -57,27 +57,27 @@ return function()
 
 	it("should flatten children to be assigned", function()
 		local expect = getfenv().expect
-		
+
 		local scope = {}
-		local ins = New(scope, "Folder") {
+		local ins = New(scope, "Folder")({
 			Name = "Bob",
 
 			[Children] = {
-				New(scope, "Folder") {
-					Name = "Fred"
-				} :: any,
+				New(scope, "Folder")({
+					Name = "Fred",
+				}) :: any,
 				{
-					New(scope, "Folder") {
-						Name = "George"
-					} :: any,
+					New(scope, "Folder")({
+						Name = "George",
+					}) :: any,
 					{
-						New(scope, "Folder") {
-							Name = "Harry"
-						}
-					}
-				}
-			}
-		}
+						New(scope, "Folder")({
+							Name = "Harry",
+						}),
+					},
+				},
+			},
+		})
 
 		expect(ins:FindFirstChild("Fred")).to.be.ok()
 		expect(ins:FindFirstChild("George")).to.be.ok()
@@ -87,30 +87,30 @@ return function()
 
 	it("should bind State objects passed as children", function()
 		local expect = getfenv().expect
-		
+
 		local scope = {}
-		local child1 = New(scope, "Folder") {}
-		local child2 = New(scope, "Folder") {}
-		local child3 = New(scope, "Folder") {}
-		local child4 = New(scope, "Folder") {}
+		local child1 = New(scope, "Folder")({})
+		local child2 = New(scope, "Folder")({})
+		local child3 = New(scope, "Folder")({})
+		local child4 = New(scope, "Folder")({})
 
-		local children = Value(scope, {child1})
+		local children = Value(scope, { child1 })
 
-		local parent = New(scope, "Folder") {
+		local parent = New(scope, "Folder")({
 			[Children] = {
-				children
-			}
-		}
+				children,
+			},
+		})
 
 		expect(child1.Parent).to.equal(parent)
 
-		children:set({child2, child3})
+		children:set({ child2, child3 })
 
 		expect(child1.Parent).to.equal(nil)
 		expect(child2.Parent).to.equal(parent)
 		expect(child3.Parent).to.equal(parent)
 
-		children:set({child1, child2, child3, child4})
+		children:set({ child1, child2, child3, child4 })
 
 		expect(child1.Parent).to.equal(parent)
 		expect(child2.Parent).to.equal(parent)
@@ -121,18 +121,18 @@ return function()
 
 	it("should defer updates to State children", function()
 		local expect = getfenv().expect
-		
+
 		local scope = {}
-		local child1 = New(scope, "Folder") {}
-		local child2 = New(scope, "Folder") {}
+		local child1 = New(scope, "Folder")({})
+		local child2 = New(scope, "Folder")({})
 
 		local children = Value(scope, child1)
 
-		local parent = New(scope, "Folder") {
+		local parent = New(scope, "Folder")({
 			[Children] = {
-				children
-			}
-		}
+				children,
+			},
+		})
 
 		expect(child1.Parent).to.equal(parent)
 
@@ -145,27 +145,27 @@ return function()
 
 	it("should recursively bind State children", function()
 		local expect = getfenv().expect
-		
+
 		local scope = {}
-		local child1 = New(scope, "Folder") {}
-		local child2 = New(scope, "Folder") {}
-		local child3 = New(scope, "Folder") {}
-		local child4 = New(scope, "Folder") {}
+		local child1 = New(scope, "Folder")({})
+		local child2 = New(scope, "Folder")({})
+		local child3 = New(scope, "Folder")({})
+		local child4 = New(scope, "Folder")({})
 
 		local children = Value(scope, {
 			child1 :: any,
 			Value(scope, child2),
 			Value(scope, {
 				child3 :: any,
-				Value(scope, Value(scope, child4))
-			})
+				Value(scope, Value(scope, child4)),
+			}),
 		})
 
-		local parent = New(scope, "Folder") {
+		local parent = New(scope, "Folder")({
 			[Children] = {
-				children
-			}
-		}
+				children,
+			},
+		})
 
 		expect(child1.Parent).to.equal(parent)
 		expect(child2.Parent).to.equal(parent)
@@ -176,17 +176,17 @@ return function()
 
 	it("should allow for State children to be nil", function()
 		local expect = getfenv().expect
-		
+
 		local scope = {}
-		local child = New(scope, "Folder") {}
+		local child = New(scope, "Folder")({})
 
 		local children = Value(scope, nil :: Instance?)
 
-		local parent = New(scope, "Folder") {
+		local parent = New(scope, "Folder")({
 			[Children] = {
-				children
-			}
-		}
+				children,
+			},
+		})
 
 		expect(child.Parent).to.equal(nil)
 

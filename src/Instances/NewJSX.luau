@@ -30,7 +30,7 @@ local xtypeof = require(Package.Utility.xtypeof)
 type Component = (scope: Types.Scope<unknown>, ...unknown) -> Instance
 type MaybeSpecialKey = Types.SpecialKey | (string) -> Types.SpecialKey
 
-local SPECIAL_KEYS: {[string]: MaybeSpecialKey} = {
+local SPECIAL_KEYS: { [string]: MaybeSpecialKey } = {
 	Attribute = Attribute,
 	AttributeChange = AttributeChange,
 	AttributeOut = AttributeOut,
@@ -40,11 +40,7 @@ local SPECIAL_KEYS: {[string]: MaybeSpecialKey} = {
 	Out = Out,
 }
 
-local function NewJSX(
-	component: string | Component,
-	props: {[string]: unknown},
-	...: Types.Child
-): Instance
+local function NewJSX(component: string | Component, props: { [string]: unknown }, ...: Types.Child): Instance
 	local scope = props.Scope :: Types.Scope<unknown>
 	if scope == nil then
 		External.logError("scopeMissing", nil, "instances using JSX-style New", `<textlabel Scope=\{ myScope }/>`)
@@ -74,7 +70,7 @@ local function NewJSX(
 			appliedProps[impl] = value
 			continue
 		end
-		
+
 		local seperator = string.find(name, ":")
 		if seperator then
 			local implName = string.sub(name, 1, seperator - 1)

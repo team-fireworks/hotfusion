@@ -27,39 +27,37 @@ local doCleanup = require(Package.Memory.doCleanup)
 
 local function ForValues<K, VI, VO, S>(
 	scope: Types.Scope<S>,
-	inputTable: Types.UsedAs<{[K]: VI}>,
+	inputTable: Types.UsedAs<{ [K]: VI }>,
 	processor: (Types.Use, Types.Scope<S>, VI) -> VO,
 	destructor: unknown?
 ): Types.For<K, VO>
 	if typeof(inputTable) == "function" then
-		External.logError("scopeMissing", nil, "ForValues", "myScope:ForValues(inputTable, function(use, scope, value) ... end)")
+		External.logError(
+			"scopeMissing",
+			nil,
+			"ForValues",
+			"myScope:ForValues(inputTable, function(use, scope, value) ... end)"
+		)
 	elseif destructor ~= nil then
 		External.logWarn("destructorRedundant", "ForValues")
 	end
-	return For(
-		scope,
-		inputTable,
-		function(
-			scope: Types.Scope<S>,
-			inputPair: Types.StateObject<{key: K, value: VI}>
-		)
-			local inputValue = Computed(scope, function(use, scope): VI
-				return use(inputPair).value
-			end)
-			return Computed(scope, function(use, scope): {key: nil, value: VO?}
-				local ok, value = xpcall(processor, parseError, use, scope, use(inputValue))
-				if ok then
-					return {key = nil, value = value}
-				else
-					local errorObj = (value :: any) :: Types.Error
-					External.logErrorNonFatal("callbackError", errorObj)
-					doCleanup(scope)
-					table.clear(scope)
-					return {key = nil, value = nil}
-				end
-			end)
-		end
-	)
+	return For(scope, inputTable, function(scope: Types.Scope<S>, inputPair: Types.StateObject<{ key: K, value: VI }>)
+		local inputValue = Computed(scope, function(use, scope): VI
+			return use(inputPair).value
+		end)
+		return Computed(scope, function(use, scope): { key: nil, value: VO? }
+			local ok, value = xpcall(processor, parseError, use, scope, use(inputValue))
+			if ok then
+				return { key = nil, value = value }
+			else
+				local errorObj = (value :: any) :: Types.Error
+				External.logErrorNonFatal("callbackError", errorObj)
+				doCleanup(scope)
+				table.clear(scope)
+				return { key = nil, value = nil }
+			end
+		end)
+	end)
 end
 
 return ForValues

@@ -12,28 +12,21 @@ local Package = script.Parent.Parent
 local Types = require(Package.Types)
 local External = require(Package.External)
 
-local keyCache: {[string]: Types.SpecialKey} = {}
+local keyCache: { [string]: Types.SpecialKey } = {}
 
-local function Out(
-	propertyName: string
-): Types.SpecialKey
+local function Out(propertyName: string): Types.SpecialKey
 	local key = keyCache[propertyName]
 	if key == nil then
 		key = {
 			type = "SpecialKey",
 			kind = "Out",
 			stage = "observer",
-			apply = function(
-				self: Types.SpecialKey,
-				scope: Types.Scope<unknown>,
-				value: unknown,
-				applyTo: Instance
-			)
+			apply = function(self: Types.SpecialKey, scope: Types.Scope<unknown>, value: unknown, applyTo: Instance)
 				local ok, event = pcall(applyTo.GetPropertyChangedSignal, applyTo, propertyName)
 				if not ok then
 					External.logError("invalidOutProperty", nil, applyTo.ClassName, propertyName)
 				end
-	
+
 				if typeof(value) ~= "function" then
 					External.logError("invalidOutType")
 				end
@@ -45,7 +38,7 @@ local function Out(
 						setValue((applyTo :: any)[propertyName])
 					end)
 				)
-			end
+			end,
 		}
 		keyCache[propertyName] = key
 	end

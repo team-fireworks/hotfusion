@@ -26,26 +26,15 @@ local peek = require(Package.State.peek)
 local xtypeof = require(Package.Utility.xtypeof)
 local whichLivesLonger = require(Package.Memory.whichLivesLonger)
 
-local function setProperty_unsafe(
-	instance: Instance,
-	property: string,
-	value: unknown
-)
+local function setProperty_unsafe(instance: Instance, property: string, value: unknown)
 	(instance :: any)[property] = value
 end
 
-local function testPropertyAssignable(
-	instance: Instance,
-	property: string
-)
+local function testPropertyAssignable(instance: Instance, property: string)
 	(instance :: any)[property] = (instance :: any)[property]
 end
 
-local function setProperty(
-	instance: Instance,
-	property: string,
-	value: unknown
-)
+local function setProperty(instance: Instance, property: string, value: unknown)
 	local success, err = xpcall(setProperty_unsafe :: any, parseError, instance, property, value)
 
 	if not success then
@@ -60,7 +49,14 @@ local function setProperty(
 			if givenType == expectedType then
 				External.logErrorNonFatal("propertySetError", err)
 			else
-				External.logErrorNonFatal("invalidPropertyType", nil, instance.ClassName, property, expectedType, givenType)
+				External.logErrorNonFatal(
+					"invalidPropertyType",
+					nil,
+					instance.ClassName,
+					property,
+					expectedType,
+					givenType
+				)
 			end
 		end
 	end
@@ -75,9 +71,18 @@ local function bindProperty(
 	if isState(value) then
 		local value = value :: Types.StateObject<unknown>
 		if value.scope == nil then
-			External.logError("useAfterDestroy", nil, `The {value.kind} object, bound to {property},`, `the {instance.ClassName} instance`)
+			External.logError(
+				"useAfterDestroy",
+				nil,
+				`The {value.kind} object, bound to {property},`,
+				`the {instance.ClassName} instance`
+			)
 		elseif whichLivesLonger(scope, instance, value.scope, value.oldestTask) == "definitely-a" then
-			External.logWarn("possiblyOutlives", `The {value.kind} object, bound to {property},`, `the {instance.ClassName} instance`)
+			External.logWarn(
+				"possiblyOutlives",
+				`The {value.kind} object, bound to {property},`,
+				`the {instance.ClassName} instance`
+			)
 		end
 		-- value is a state object - bind to changes
 		Observer(scope, value :: any):onBind(function()
@@ -89,16 +94,12 @@ local function bindProperty(
 	end
 end
 
-local function applyInstanceProps(
-	scope: Types.Scope<unknown>,
-	props: Types.PropertyTable,
-	applyTo: Instance
-)
+local function applyInstanceProps(scope: Types.Scope<unknown>, props: Types.PropertyTable, applyTo: Instance)
 	local specialKeys = {
-		self = {} :: {[Types.SpecialKey]: unknown},
-		descendants = {} :: {[Types.SpecialKey]: unknown},
-		ancestor = {} :: {[Types.SpecialKey]: unknown},
-		observer = {} :: {[Types.SpecialKey]: unknown}
+		self = {} :: { [Types.SpecialKey]: unknown },
+		descendants = {} :: { [Types.SpecialKey]: unknown },
+		ancestor = {} :: { [Types.SpecialKey]: unknown },
+		observer = {} :: { [Types.SpecialKey]: unknown },
 	}
 
 	for key, value in pairs(props) do

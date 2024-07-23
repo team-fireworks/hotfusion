@@ -53,14 +53,14 @@ function class:update(): boolean
 	table.clear(self.dependencySet)
 
 	if isState(self._inputTable) then
-		local inputTable = self._inputTable :: Types.StateObject<{[unknown]: unknown}> 
+		local inputTable = self._inputTable :: Types.StateObject<{ [unknown]: unknown }>
 		inputTable.dependentSet[self], self.dependencySet[inputTable] = true, true
 	end
 
 	if newInputTable ~= existingInputTable then
 		for key, value in newInputTable do
 			if remainingPairs[key] == nil then
-				remainingPairs[key] = {[value] = true}
+				remainingPairs[key] = { [value] = true }
 			else
 				remainingPairs[key][value] = true
 			end
@@ -76,7 +76,7 @@ function class:update(): boolean
 				for key, remainingValues in remainingPairs do
 					if remainingValues[value] ~= nil then
 						remainingValues[value] = nil
-						tryReuseProcessor.inputPair:set({key = key, value = value})
+						tryReuseProcessor.inputPair:set({ key = key, value = value })
 						newProcessors[tryReuseProcessor] = true
 						existingProcessors[tryReuseProcessor] = nil
 						break
@@ -91,7 +91,6 @@ function class:update(): boolean
 					existingProcessors[tryReuseProcessor] = nil
 				end
 			end
-			
 		end
 		-- Next, try and reuse processors who match the key of a remaining pair.
 		-- The value will change but the key will stay stable.
@@ -102,7 +101,7 @@ function class:update(): boolean
 				local value = next(remainingValues)
 				if value ~= nil then
 					remainingValues[value] = nil
-					tryReuseProcessor.inputPair:set({key = key, value = value})
+					tryReuseProcessor.inputPair:set({ key = key, value = value })
 					newProcessors[tryReuseProcessor] = true
 					existingProcessors[tryReuseProcessor] = nil
 				end
@@ -115,7 +114,7 @@ function class:update(): boolean
 			for key, remainingValues in remainingPairs do
 				if remainingValues[value] ~= nil then
 					remainingValues[value] = nil
-					tryReuseProcessor.inputPair:set({key = key, value = value})
+					tryReuseProcessor.inputPair:set({ key = key, value = value })
 					newProcessors[tryReuseProcessor] = true
 					existingProcessors[tryReuseProcessor] = nil
 					break
@@ -129,7 +128,7 @@ function class:update(): boolean
 				local value = next(remainingValues)
 				if value ~= nil then
 					remainingValues[value] = nil
-					tryReuseProcessor.inputPair:set({key = key, value = value})
+					tryReuseProcessor.inputPair:set({ key = key, value = value })
 					newProcessors[tryReuseProcessor] = true
 					existingProcessors[tryReuseProcessor] = nil
 					break
@@ -146,18 +145,18 @@ function class:update(): boolean
 			doCleanup(unusedProcessor.scope)
 			scopePool.clearAndGive(unusedProcessor.scope :: any)
 		end
-		
+
 		for key, remainingValues in remainingPairs do
 			for value in remainingValues do
 				local innerScope = deriveScope(outerScope)
-				local inputPair = Value(innerScope, {key = key, value = value})
+				local inputPair = Value(innerScope, { key = key, value = value })
 				local processOK, outputPair = xpcall(self._processor, parseError, innerScope, inputPair)
 				local innerScope = scopePool.giveIfEmpty(innerScope)
 				if processOK then
 					local processor = {
 						inputPair = inputPair,
 						outputPair = outputPair,
-						scope = innerScope
+						scope = innerScope,
 					}
 					newProcessors[processor] = true
 				else
@@ -212,10 +211,9 @@ local function For<KI, KO, VI, VO, S>(
 	inputTable: Types.UsedAs<{ [KI]: VI }>,
 	processor: (
 		Types.Scope<S>,
-		Types.StateObject<{key: KI, value: VI}>
-	) -> (Types.StateObject<{key: KO?, value: VO?}>)
+		Types.StateObject<{ key: KI, value: VI }>
+	) -> Types.StateObject<{ key: KO?, value: VO? }>
 ): Types.For<KO, VO>
-
 	local self = setmetatable({
 		scope = scope,
 		dependencySet = {},
@@ -227,7 +225,7 @@ local function For<KI, KO, VI, VO, S>(
 		_existingProcessors = {},
 		_newOutputTable = {},
 		_newProcessors = {},
-		_remainingPairs = {}
+		_remainingPairs = {},
 	}, CLASS_METATABLE)
 	local self = (self :: any) :: InternalTypes.For<KI, KO, VI, VO, S>
 

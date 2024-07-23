@@ -10,10 +10,7 @@ local task = nil -- Disable usage of Roblox's task scheduler
 
 local TweenService = game:GetService("TweenService")
 
-local function getTweenRatio(
-	tweenInfo: TweenInfo,
-	currentTime: number
-): number
+local function getTweenRatio(tweenInfo: TweenInfo, currentTime: number): number
 	local delay = tweenInfo.DelayTime
 	local duration = tweenInfo.Time
 	local reverses = tweenInfo.Reverses

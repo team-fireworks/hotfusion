@@ -23,7 +23,7 @@ local class = {}
 class.type = "State"
 class.kind = "Spring"
 
-local CLASS_METATABLE = {__index = class}
+local CLASS_METATABLE = { __index = class }
 
 --[[
 	Sets the position of the internal springs, meaning the value of this
@@ -32,9 +32,7 @@ local CLASS_METATABLE = {__index = class}
 	If the type doesn't match the current type of the spring, an error will be
 	thrown.
 ]]
-function class:setPosition(
-	newValue: Types.Animatable
-)
+function class:setPosition(newValue: Types.Animatable)
 	local self = self :: InternalTypes.Spring<unknown>
 	local newType = typeof(newValue)
 	if newType ~= self._currentType then
@@ -54,9 +52,7 @@ end
 	If the type doesn't match the current type of the spring, an error will be
 	thrown.
 ]]
-function class:setVelocity(
-	newValue: Types.Animatable
-)
+function class:setVelocity(newValue: Types.Animatable)
 	local self = self :: InternalTypes.Spring<unknown>
 	local newType = typeof(newValue)
 	if newType ~= self._currentType then
@@ -74,9 +70,7 @@ end
 	If the type doesn't match the current type of the spring, an error will be
 	thrown.
 ]]
-function class:addVelocity(
-	deltaValue: Types.Animatable
-)
+function class:addVelocity(deltaValue: Types.Animatable)
 	local self = self :: InternalTypes.Spring<unknown>
 	local deltaType = typeof(deltaValue)
 	if deltaType ~= self._currentType then
@@ -154,7 +148,6 @@ function class:update(): boolean
 			-- if the type isn't animatable, snap to the new value
 			self._currentValue = self._goalValue
 			return true
-
 		else
 			-- if it's animatable, let it animate to the goal
 			SpringScheduler.add(self)
@@ -192,7 +185,7 @@ local function Spring<T>(
 		damping = 1
 	end
 
-	local dependencySet: {[Types.Dependency]: unknown} = {}
+	local dependencySet: { [Types.Dependency]: unknown } = {}
 	local goalIsState = isState(goal)
 	if goalIsState then
 		local goal = goal :: Types.StateObject<T>
@@ -228,7 +221,7 @@ local function Spring<T>(
 
 		_lastSchedule = -math.huge,
 		_startDisplacements = {},
-		_startVelocities = {}
+		_startVelocities = {},
 	}, CLASS_METATABLE)
 	local self = (self :: any) :: InternalTypes.Spring<T>
 
@@ -241,7 +234,7 @@ local function Spring<T>(
 	end
 	self.oldestTask = destroy
 	table.insert(scope, destroy)
-	
+
 	if goalIsState then
 		local goal = goal :: Types.StateObject<T>
 		if goal.scope == nil then

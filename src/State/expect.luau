@@ -16,9 +16,7 @@ local InternalTypes = require(Package.InternalTypes)
 local Observer = require(Package.State.Observer)
 local isState = require(Package.State.isState)
 
-local function expect<T>(
-	target: Types.UsedAs<T>
-): T
+local function expect<T>(target: Types.UsedAs<T>): T
 	if not isState(target) then
 		return target :: T
 	end

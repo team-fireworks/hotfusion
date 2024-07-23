@@ -18,27 +18,19 @@ return function()
 		local scope = {}
 		local instance = Instance.new("Folder")
 		table.insert(scope, instance)
-		applyInstanceProps(
-			scope,
-			{ Name = "Bob" },
-			instance
-		)
+		applyInstanceProps(scope, { Name = "Bob" }, instance)
 		expect(instance.Name).to.equal("Bob")
 		doCleanup(scope)
 	end)
 
 	it("should assign properties (state)", function()
 		local expect = getfenv().expect
-		
+
 		local scope = {}
 		local value = Value(scope, "Bob")
 		local instance = Instance.new("Folder")
 		table.insert(scope, instance)
-		applyInstanceProps(
-			scope,
-			{ Name = value },
-			instance
-		)
+		applyInstanceProps(scope, { Name = value }, instance)
 		expect(instance.Name).to.equal("Bob")
 
 		value:set("Maya")
@@ -48,24 +40,20 @@ return function()
 
 	it("should assign Parent (constant)", function()
 		local expect = getfenv().expect
-		
+
 		local scope = {}
 		local parent = Instance.new("Folder")
 		table.insert(scope, parent)
 		local instance = Instance.new("Folder")
 		table.insert(scope, instance)
-		applyInstanceProps(
-			scope,
-			{ Parent = parent },
-			instance
-		)
+		applyInstanceProps(scope, { Parent = parent }, instance)
 		expect(instance.Parent).to.equal(parent)
 		doCleanup(scope)
 	end)
 
 	it("should assign Parent (state)", function()
 		local expect = getfenv().expect
-		
+
 		local scope = {}
 		local parent1 = Instance.new("Folder")
 		table.insert(scope, parent1)
@@ -74,11 +62,7 @@ return function()
 		local value = Value(scope, parent1)
 		local instance = Instance.new("Folder")
 		table.insert(scope, instance)
-		applyInstanceProps(
-			scope,
-			{ Parent = value },
-			instance
-		)
+		applyInstanceProps(scope, { Parent = value }, instance)
 		expect(instance.Parent).to.equal(parent1)
 
 		value:set(parent2)
@@ -92,7 +76,7 @@ return function()
 
 	-- it("should throw for non-existent properties (constant)", function()
 	-- 	local expect = getfenv().expect
-		
+
 	-- 	expect(function()
 	-- 		local scope = {}
 	-- 		local instance = Instance.new("Folder")
@@ -108,7 +92,7 @@ return function()
 
 	-- it("should throw for non-existent properties (state)", function()
 	-- 	local expect = getfenv().expect
-		
+
 	-- 	expect(function()
 	-- 		local scope = {}
 	-- 		local value = Value(scope, true)
@@ -125,7 +109,7 @@ return function()
 
 	-- it("should throw for invalid property types (constant)", function()
 	-- 	local expect = getfenv().expect
-		
+
 	-- 	expect(function()
 	-- 		local scope = {}
 	-- 		local instance = Instance.new("Folder")
@@ -141,7 +125,7 @@ return function()
 
 	-- it("should throw for invalid property types (state)", function()
 	-- 	local expect = getfenv().expect
-		
+
 	-- 	expect(function()
 	-- 		local scope = {}
 	-- 		local value = Value(scope, Vector3.new())
@@ -158,7 +142,7 @@ return function()
 
 	-- it("should throw for invalid Parent types (constant)", function()
 	-- 	local expect = getfenv().expect
-		
+
 	-- 	expect(function()
 	-- 		local scope = {}
 	-- 		local instance = Instance.new("Folder")
@@ -174,10 +158,10 @@ return function()
 
 	-- it("should throw for invalid Parent types (state)", function()
 	-- 	local expect = getfenv().expect
-		
+
 	-- 	expect(function()
 	-- 		local scope = {}
-	-- 		local value = Value(scope, Vector3.new()) 
+	-- 		local value = Value(scope, Vector3.new())
 	-- 		local instance = Instance.new("Folder")
 	-- 		table.insert(scope, instance)
 	-- 		applyInstanceProps(
@@ -191,16 +175,12 @@ return function()
 
 	it("should throw for unrecognised keys in the property table", function()
 		local expect = getfenv().expect
-		
+
 		expect(function()
 			local scope = {}
 			local instance = Instance.new("Folder")
 			table.insert(scope, instance)
-			applyInstanceProps(
-				scope,
-				{ [2 :: any] = true }, 
-				instance
-			)
+			applyInstanceProps(scope, { [2 :: any] = true }, instance)
 			doCleanup(scope)
 		end).to.throw("unrecognisedPropertyKey")
 	end)

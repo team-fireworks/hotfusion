@@ -8,17 +8,15 @@ local External = require(Fusion.External)
 local SpecExternal = {}
 
 SpecExternal.policies = {
-	allowWebLinks = true
+	allowWebLinks = true,
 }
 
-local queue = {} :: {thread}
+local queue = {} :: { thread }
 
 --[[
    Sends an immediate task to the external scheduler. Throws if none is set.
 ]]
-function SpecExternal.doTaskImmediate(
-	resume: () -> ()
-)
+function SpecExternal.doTaskImmediate(resume: () -> ())
 	table.insert(queue, 1, coroutine.running())
 	table.insert(queue, 1, coroutine.create(resume))
 	coroutine.yield()
@@ -27,9 +25,7 @@ end
 --[[
 	Sends a deferred task to the external scheduler. Throws if none is set.
 ]]
-function SpecExternal.doTaskDeferred(
-	resume: () -> ()
-)
+function SpecExternal.doTaskDeferred(resume: () -> ())
 	table.insert(queue, coroutine.create(resume))
 end
 
@@ -41,18 +37,14 @@ end
 --[[
 	Errors in a different thread to preserve the flow of execution.
 ]]
-function SpecExternal.logErrorNonFatal(
-	errorString: string
-): ()
+function SpecExternal.logErrorNonFatal(errorString: string): ()
 	-- silently discard
 end
 
 --[[
 	Shows a warning message in the output.
 ]]
-function SpecExternal.logWarn(
-	errorString: string
-): ()
+function SpecExternal.logWarn(errorString: string): ()
 	-- silently discard
 end
 
@@ -75,9 +67,7 @@ end
 --[[
 	Unbinds Fusion's update step from RunService step events.
 ]]
-function SpecExternal.step(
-	currentTime: number
-)
+function SpecExternal.step(currentTime: number)
 	if doUpdateSteps then
 		External.performUpdateStep(currentTime)
 	end

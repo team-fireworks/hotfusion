@@ -14,17 +14,12 @@ local External = require(Package.External)
 local defaultProps = require(Package.Instances.defaultProps)
 local applyInstanceProps = require(Package.Instances.applyInstanceProps)
 
-local function New(
-	scope: Types.Scope<unknown>,
-	className: string
-)
+local function New(scope: Types.Scope<unknown>, className: string)
 	if (className :: any) == nil then
 		local scope = (scope :: any) :: string
-		External.logError("scopeMissing", nil, "instances using New", "myScope:New \"" .. scope .. "\" { ... }")
+		External.logError("scopeMissing", nil, "instances using New", 'myScope:New "' .. scope .. '" { ... }')
 	end
-	return function(
-		props: Types.PropertyTable
-	): Instance
+	return function(props: Types.PropertyTable): Instance
 		local ok, instance = pcall(Instance.new, className)
 		if not ok then
 			External.logError("cannotCreateClass", nil, className)

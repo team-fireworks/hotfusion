@@ -1,5 +1,5 @@
 --!strict
 
 return {
-	runTests = true
+	runTests = true,
 }

@@ -24,7 +24,7 @@ local function buildReactiveGraph(ancestorsToDescendants, handler: (any) -> bool
 			update = handler,
 			updates = 0,
 			name = named,
-			scope = "not nil"
+			scope = "not nil",
 		}
 
 		objects[named] = object
@@ -51,7 +51,7 @@ return function()
 
 	it("should update transitive dependencies", function()
 		local expect = getfenv().expect
-		
+
 		local objects = buildReactiveGraph({
 			edge("A", "B"),
 			edge("B", "C"),
@@ -71,10 +71,12 @@ return function()
 
 	it("should only update objects once", function()
 		local expect = getfenv().expect
-		
+
 		local objects = buildReactiveGraph({
-			edge("A", "B"), edge("A", "C"),
-			edge("B", "D"), edge("C", "D"),
+			edge("A", "B"),
+			edge("A", "C"),
+			edge("B", "D"),
+			edge("C", "D"),
 		}, function(self: any)
 			self.updates += 1
 			return true
@@ -90,7 +92,7 @@ return function()
 
 	it("should not update destroyed objects", function()
 		local expect = getfenv().expect
-		
+
 		local objects = buildReactiveGraph({
 			edge("A", "B"),
 			edge("B", "C"),
@@ -117,7 +119,7 @@ return function()
 
 	it("should not update unchanged subgraphs", function()
 		local expect = getfenv().expect
-		
+
 		local objects = buildReactiveGraph({
 			edge("A", "B"),
 			edge("B", "C"),
@@ -137,9 +139,10 @@ return function()
 
 	it("should update state objects in subgraphs of unchanged state objects", function()
 		local expect = getfenv().expect
-		
+
 		local objects = buildReactiveGraph({
-			edge("A", "B"), edge("A", "D"),
+			edge("A", "B"),
+			edge("A", "D"),
 			edge("B", "C"),
 			edge("C", "E"),
 			edge("D", "E"),
@@ -165,11 +168,16 @@ return function()
 
 	it("should update complicated graphs correctly", function()
 		local expect = getfenv().expect
-		
+
 		local objects = buildReactiveGraph({
-			edge("A", "B"), edge("A", "F"), edge("A", "I"),
-			edge("B", "C"), edge("B", "D"), edge("B", "E"),
-			edge("C", "E"), edge("C", "G"),
+			edge("A", "B"),
+			edge("A", "F"),
+			edge("A", "I"),
+			edge("B", "C"),
+			edge("B", "D"),
+			edge("B", "E"),
+			edge("C", "E"),
+			edge("C", "G"),
 			edge("D", "F"),
 			edge("E", "H"),
 			edge("F", "I"),

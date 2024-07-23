@@ -12,7 +12,7 @@ return function()
 
 	it("should construct a Contextual object", function()
 		local expect = getfenv().expect
-		
+
 		local ctx = Contextual(nil)
 
 		expect(ctx).to.be.a("table")
@@ -21,7 +21,7 @@ return function()
 
 	it("should provide its default value", function()
 		local expect = getfenv().expect
-		
+
 		local ctx = Contextual("foo")
 
 		expect(ctx:now()).to.equal("foo")
@@ -29,7 +29,7 @@ return function()
 
 	it("should correctly scope temporary values", function()
 		local expect = getfenv().expect
-		
+
 		local ctx = Contextual("foo")
 
 		expect(ctx:now()).to.equal("foo")
@@ -51,7 +51,7 @@ return function()
 
 	it("should allow for argument passing", function()
 		local expect = getfenv().expect
-		
+
 		local ctx = Contextual("foo")
 
 		local function test(a, b, c, d)
@@ -67,7 +67,7 @@ return function()
 
 	it("should not interfere across coroutines", function()
 		local expect = getfenv().expect
-		
+
 		local ctx = Contextual("foo")
 
 		local coro1 = coroutine.create(function()

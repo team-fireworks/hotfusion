@@ -21,7 +21,7 @@ local class = {}
 class.type = "State"
 class.kind = "Tween"
 
-local CLASS_METATABLE = {__index = class}
+local CLASS_METATABLE = { __index = class }
 
 --[[
 	Called when the goal state changes value; this will initiate a new tween.
@@ -91,7 +91,7 @@ local function Tween<T>(
 		tweenInfo = TweenInfo.new()
 	end
 
-	local dependencySet: {[Types.Dependency]: unknown} = {}
+	local dependencySet: { [Types.Dependency]: unknown } = {}
 
 	local goalIsState = isState(goal)
 	if goalIsState then
@@ -128,7 +128,7 @@ local function Tween<T>(
 		_currentTweenInfo = tweenInfo,
 		_currentTweenDuration = 0,
 		_currentTweenStartTime = 0,
-		_currentlyAnimating = false
+		_currentlyAnimating = false,
 	}, CLASS_METATABLE)
 	local self = (self :: any) :: InternalTypes.Tween<T>
 
@@ -141,7 +141,7 @@ local function Tween<T>(
 	end
 	self.oldestTask = destroy
 	table.insert(scope, destroy)
-	
+
 	if goalIsState then
 		local goal = goal :: any
 		if goal.scope == nil then

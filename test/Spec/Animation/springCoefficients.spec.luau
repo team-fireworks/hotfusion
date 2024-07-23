@@ -63,7 +63,7 @@ return function()
 
 	it("should return reasonable overdamped values", function()
 		local expect = getfenv().expect
-		
+
 		local posPos, posVel, velPos, velVel = springCoefficients(1.74, 8.4, 7.2)
 
 		expect(posPos).to.be.near(0.4748290157123269, ERROR_MARGIN)

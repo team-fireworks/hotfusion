@@ -15,34 +15,34 @@ return function()
 
 	it("creates attributes (constant)", function()
 		local expect = getfenv().expect
-		
+
 		local scope = {}
-		local child = New(scope, "Folder") {
-			[Attribute "Foo"] = "Bar"
-		}
+		local child = New(scope, "Folder")({
+			[Attribute("Foo")] = "Bar",
+		})
 		expect(child:GetAttribute("Foo")).to.equal("Bar")
 		doCleanup(scope)
 	end)
 
 	it("creates attributes (state)", function()
 		local expect = getfenv().expect
-		
+
 		local scope = {}
 		local attributeValue = Value(scope, "Bar")
-		local child = New(scope, "Folder") {
-			[Attribute "Foo"] = attributeValue
-		}
+		local child = New(scope, "Folder")({
+			[Attribute("Foo")] = attributeValue,
+		})
 		expect(child:GetAttribute("Foo")).to.equal("Bar")
 	end)
-	
+
 	it("updates attributes when state objects are updated", function()
 		local expect = getfenv().expect
-		
+
 		local scope = {}
 		local attributeValue = Value(scope, "Bar")
-		local child = New(scope, "Folder") {
-			[Attribute "Foo"] = attributeValue
-		}
+		local child = New(scope, "Folder")({
+			[Attribute("Foo")] = attributeValue,
+		})
 		expect(child:GetAttribute("Foo")).to.equal("Bar")
 		attributeValue:set("Baz")
 		expect(child:GetAttribute("Foo")).to.equal("Baz")

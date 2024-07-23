@@ -15,17 +15,14 @@ local task = nil -- Disable usage of Roblox's task scheduler
 local Package = script.Parent.Parent
 local Types = require(Package.Types)
 
-local function constructorsOf(
-	scope: Types.Scope<unknown>,
-	target: {[unknown]: unknown}
-): {[unknown]: unknown}
-	local methods: {[unknown]: unknown} = {}
+local function constructorsOf(scope: Types.Scope<unknown>, target: { [unknown]: unknown }): { [unknown]: unknown }
+	local methods: { [unknown]: unknown } = {}
 	for key, value in pairs(target) do
 		if typeof(value) ~= "function" then
 			methods[key] = value
 			continue
 		end
-		local constructor = value :: (Types.Scope<unknown>, ...unknown) -> (...unknown)
+		local constructor = value :: (Types.Scope<unknown>, ...unknown) -> ...unknown
 		methods[key] = function(...: unknown)
 			return constructor(scope, ...)
 		end

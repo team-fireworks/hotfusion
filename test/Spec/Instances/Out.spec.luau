@@ -20,13 +20,13 @@ return function()
 
 	itSKIP("should reflect external property changes", function()
 		local expect = getfenv().expect
-		
+
 		local scope = {}
 		local outValue = Value(scope, nil)
 
-		local child = New(scope, "Folder") {
-			[Out "Name"] = outValue
-		}
+		local child = New(scope, "Folder")({
+			[Out("Name")] = outValue,
+		})
 		expect(peek(outValue)).to.equal("Folder")
 
 		child.Name = "Mary"
@@ -39,15 +39,15 @@ return function()
 
 	itSKIP("should reflect property changes from bound state", function()
 		local expect = getfenv().expect
-		
+
 		local scope = {}
 		local outValue = Value(scope, nil)
 		local inValue = Value(scope, "Gabriel")
 
-		New(scope, "Folder") {
+		New(scope, "Folder")({
 			Name = inValue,
-			[Out "Name"] = outValue
-		}
+			[Out("Name")] = outValue,
+		})
 		expect(peek(outValue)).to.equal("Gabriel")
 
 		inValue:set("Joseph")
@@ -60,14 +60,14 @@ return function()
 
 	itSKIP("should support two-way data binding", function()
 		local expect = getfenv().expect
-		
+
 		local scope = {}
 		local twoWayValue = Value(scope, "Gabriel")
 
-		local child = New(scope, "Folder") {
+		local child = New(scope, "Folder")({
 			Name = twoWayValue,
-			[Out "Name"] = twoWayValue
-		}
+			[Out("Name")] = twoWayValue,
+		})
 		expect(peek(twoWayValue)).to.equal("Gabriel")
 
 		twoWayValue:set("Joseph")

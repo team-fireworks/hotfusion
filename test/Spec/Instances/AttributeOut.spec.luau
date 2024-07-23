@@ -21,12 +21,12 @@ return function()
 
 	itSKIP("should update when attributes are changed externally", function()
 		local expect = getfenv().expect
-		
+
 		local scope = {}
 		local attributeValue = Value(scope, nil)
-		local child = New(scope, "Folder") {
-			[AttributeOut "Foo"] = attributeValue
-		}
+		local child = New(scope, "Folder")({
+			[AttributeOut("Foo")] = attributeValue,
+		})
 
 		expect(peek(attributeValue)).to.equal(nil)
 		child:SetAttribute("Foo", "Bar")
@@ -39,14 +39,14 @@ return function()
 
 	itSKIP("should update when state objects linked update", function()
 		local expect = getfenv().expect
-		
+
 		local scope = {}
 		local attributeValue = Value(scope, "Foo")
 		local attributeOutValue = Value(scope, nil)
-		New(scope, "Folder") {
-			[Attribute "Foo"] = attributeValue,
-			[AttributeOut "Foo"] = attributeOutValue
-		}
+		New(scope, "Folder")({
+			[Attribute("Foo")] = attributeValue,
+			[AttributeOut("Foo")] = attributeOutValue,
+		})
 		expect(peek(attributeOutValue)).to.equal("Foo")
 		attributeValue:set("Bar")
 		expect(peek(attributeOutValue)).to.equal("Bar")
@@ -58,13 +58,13 @@ return function()
 
 	itSKIP("should work with two-way connections", function()
 		local expect = getfenv().expect
-		
+
 		local scope = {}
 		local attributeValue = Value(scope, "Bar")
-		local child = New(scope, "Folder") {
-			[Attribute "Foo"] = attributeValue,
-			[AttributeOut "Foo"] = attributeValue
-		}
+		local child = New(scope, "Folder")({
+			[Attribute("Foo")] = attributeValue,
+			[AttributeOut("Foo")] = attributeValue,
+		})
 
 		expect(peek(attributeValue)).to.equal("Bar")
 		attributeValue:set("Baz")

@@ -18,16 +18,16 @@ return function()
 
 	itSKIP("should connect property change handlers", function()
 		local expect = getfenv().expect
-		
+
 		local scope = {}
 		local fires = 0
-		local ins = New(scope, "Folder") {
+		local ins = New(scope, "Folder")({
 			Name = "Foo",
 
-			[OnChange "Name"] = function(newName)
+			[OnChange("Name")] = function(newName)
 				fires += 1
-			end
-		}
+			end,
+		})
 
 		ins.Name = "Bar"
 		expect(fires).never.to.equal(0)
@@ -39,16 +39,16 @@ return function()
 
 	itSKIP("should pass the new value to the handler", function()
 		local expect = getfenv().expect
-		
+
 		local scope = {}
 		local arg = nil
-		local ins = New(scope, "Folder") {
+		local ins = New(scope, "Folder")({
 			Name = "Foo",
 
-			[OnChange "Name"] = function(newName)
+			[OnChange("Name")] = function(newName)
 				arg = newName
-			end
-		}
+			end,
+		})
 
 		ins.Name = "Bar"
 		expect(arg).to.equal("Bar")
@@ -57,14 +57,14 @@ return function()
 
 	it("should throw when connecting to non-existent property changes", function()
 		local expect = getfenv().expect
-		
+
 		local scope = {}
 		expect(function()
-			New(scope, "Folder") {
+			New(scope, "Folder")({
 				Name = "Foo",
 
-				[OnChange "Frobulate"] = function() end
-			}
+				[OnChange("Frobulate")] = function() end,
+			})
 			doCleanup(scope)
 		end).to.throw("cannotConnectChange")
 	end)
@@ -74,21 +74,21 @@ return function()
 
 	itSKIP("shouldn't fire property changes during initialisation", function()
 		local expect = getfenv().expect
-		
+
 		local scope = {}
 		local fires = 0
-		local ins = New(scope, "Folder") {
+		local ins = New(scope, "Folder")({
 			Parent = game,
 			Name = "Foo",
 
-			[OnChange "Name"] = function()
+			[OnChange("Name")] = function()
 				fires += 1
 			end,
 
-			[OnChange "Parent"] = function()
+			[OnChange("Parent")] = function()
 				fires += 1
-			end
-		}
+			end,
+		})
 
 		local totalFires = fires
 		ins:Destroy()

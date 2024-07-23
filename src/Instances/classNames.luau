@@ -277,7 +277,7 @@ local CLASS_NAMES = {
 	"WrapTarget",
 }
 
-local classNames = {} :: {[string]: string}
+local classNames = {} :: { [string]: string }
 
 --[[
 	Generates an interface for JSX's IntrinsicElements. Used to update NewJSX

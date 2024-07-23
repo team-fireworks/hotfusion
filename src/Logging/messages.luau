@@ -43,12 +43,12 @@ return {
 		unrecognisedChildType = "'%s' type children aren't accepted by `[Children]`.",
 		unrecognisedPropertyKey = "'%s' keys aren't accepted in property tables.",
 		unrecognisedPropertyStage = "'%s' isn't a valid stage for a special key to be applied at.",
-		useAfterDestroy = "%s is no longer valid - it was destroyed before %s. See discussion #292 on GitHub for advice."
+		useAfterDestroy = "%s is no longer valid - it was destroyed before %s. See discussion #292 on GitHub for advice.",
 	},
 	Hotfusion = {
 		invalidOutType = "[Out] properties must be given a Value setter function. Value objects differs from Fusion - see Hotfusion README.",
 		missingSpecialKeyValue = "Special key %s needs a value, but none was provided. Provide one with `%s:myValue={...}`.",
 		queuedTwice = "Attempted to queue a task for destruction multiple times.",
-		valueGetWasRemoved = "`Value:set()` has been deprecated. Capture the setter as a second return value from the constructor instead (e.g. `local value, setValue = Value(\"Foo\")`).",
-	}
+		valueGetWasRemoved = '`Value:set()` has been deprecated. Capture the setter as a second return value from the constructor instead (e.g. `local value, setValue = Value("Foo")`).',
+	},
 }

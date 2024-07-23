@@ -15,28 +15,28 @@ local task = nil -- Disable usage of Roblox's task scheduler
 	- a table with a `Destroy` or `destroy` function - will be called
 	- an array - `cleanup` will be called on each item
 ]]
-	
+
 local Package = script.Parent.Parent
 local Types = require(Package.Types)
 local External = require(Package.External)
 
-type Connection = {Connected: boolean, Disconnect: (self: Connection) -> ()}
-type Promise = {getStatus: (self: Promise) -> string, cancel: (self: Promise) -> ()}
+type Connection = { Connected: boolean, Disconnect: (self: Connection) -> () }
+type Promise = { getStatus: (self: Promise) -> string, cancel: (self: Promise) -> () }
 
 local GENERIC_CLEANUP_METHODS = {
 	"destroy",
 	"Destroy",
 	"disconnect",
-	"Disconnect"
+	"Disconnect",
 }
 
-local alreadyDestroying: {[Types.Task]: true} = {}
+local alreadyDestroying: { [Types.Task]: true } = {}
 
 local function castToConnection(x: unknown): Connection?
 	if typeof(x) == "RBXScriptConnection" then
 		return x :: any
 	elseif typeof(x) == "table" then
-		local x = x :: {[unknown]: unknown}
+		local x = x :: { [unknown]: unknown }
 		if typeof(x.Connected) == "boolean" and typeof(x.Disconnect) == "function" then
 			return x :: Connection
 		end
@@ -46,7 +46,7 @@ end
 
 local function castToPromise(x: unknown): Promise?
 	if typeof(x) == "table" then
-		local x = x :: {[unknown]: unknown}
+		local x = x :: { [unknown]: unknown }
 		if typeof(x.getStatus) == "function" and typeof(x.cancel) == "function" then
 			return x :: Promise
 		end
@@ -54,9 +54,7 @@ local function castToPromise(x: unknown): Promise?
 	return nil
 end
 
-local function doCleanup(
-	task: Types.Task
-): ()
+local function doCleanup(task: Types.Task): ()
 	if alreadyDestroying[task] then
 		return External.logError("destroyedTwice")
 	end
@@ -89,16 +87,15 @@ local function doCleanup(
 				coroutine.close(toCancel)
 			end)
 		end
-		
+
 	-- case 5: Promise
 	elseif castToPromise(task) then
 		local task = task :: Promise
 		if task:getStatus() == "Started" then
 			task:cancel()
 		end
-
 	elseif typeof(task) == "table" then
-		local task: {[unknown]: unknown} = task :: any
+		local task: { [unknown]: unknown } = task :: any
 
 		local destroyed = false
 		for _, method in ipairs(GENERIC_CLEANUP_METHODS) do
@@ -112,7 +109,7 @@ local function doCleanup(
 
 		-- case 8: array of tasks
 		if not destroyed and task[1] ~= nil then
-			local task = task :: {Types.Task}
+			local task = task :: { Types.Task }
 			-- It is important to iterate backwards through the table, since
 			-- objects are added in order of construction.
 			for index = #task, 1, -1 do
@@ -121,7 +118,7 @@ local function doCleanup(
 			end
 		end
 	end
-	
+
 	alreadyDestroying[task] = nil
 end
 

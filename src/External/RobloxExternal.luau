@@ -15,33 +15,27 @@ local External = require(Package.External)
 local RobloxExternal = {}
 
 RobloxExternal.policies = {
-	allowWebLinks = RunService:IsStudio()
+	allowWebLinks = RunService:IsStudio(),
 }
 
 --[[
    Sends an immediate task to the external provider. Throws if none is set.
 ]]
-function RobloxExternal.doTaskImmediate(
-	resume: () -> ()
-)
-   task.spawn(resume)
+function RobloxExternal.doTaskImmediate(resume: () -> ())
+	task.spawn(resume)
 end
 
 --[[
 	Sends a deferred task to the external provider. Throws if none is set.
 ]]
-function RobloxExternal.doTaskDeferred(
-	resume: () -> ()
-)
+function RobloxExternal.doTaskDeferred(resume: () -> ())
 	task.defer(resume)
 end
 
 --[[
 	Errors in a different thread to preserve the flow of execution.
 ]]
-function RobloxExternal.logErrorNonFatal(
-	errorString: string
-)
+function RobloxExternal.logErrorNonFatal(errorString: string)
 	task.spawn(error, errorString, 0)
 end
 
@@ -69,11 +63,7 @@ function RobloxExternal.startScheduler()
 		-- In cases where multiple Fusion modules are running simultaneously,
 		-- this prevents collisions.
 		local id = "FusionUpdateStep_" .. HttpService:GenerateGUID()
-		RunService:BindToRenderStep(
-			id,
-			Enum.RenderPriority.First.Value,
-			performUpdateStep
-		)
+		RunService:BindToRenderStep(id, Enum.RenderPriority.First.Value, performUpdateStep)
 		stopSchedulerFunc = function()
 			RunService:UnbindFromRenderStep(id)
 		end

@@ -8,9 +8,7 @@ local Types = require(Package.Types)
 local External = require(Package.External)
 local doCleanup = require(Package.Memory.doCleanup)
 
-local function legacyCleanup(
-	value: Types.Task
-)
+local function legacyCleanup(value: Types.Task)
 	External.logWarn("cleanupWasRenamed")
 	return doCleanup(value)
 end

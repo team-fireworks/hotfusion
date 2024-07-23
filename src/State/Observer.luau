@@ -17,7 +17,7 @@ local whichLivesLonger = require(Package.Memory.whichLivesLonger)
 local class = {}
 class.type = "Observer"
 
-local CLASS_METATABLE = {__index = class}
+local CLASS_METATABLE = { __index = class }
 
 --[[
 	Called when the watched state changes value.
@@ -38,9 +38,7 @@ end
 	As long as there is at least one active change listener, this Observer
 	will be held in memory, preventing GC, so disconnecting is important.
 ]]
-function class:onChange(
-	callback: () -> ()
-): () -> ()
+function class:onChange(callback: () -> ()): () -> ()
 	local self = self :: InternalTypes.Observer
 	local uniqueIdentifier = {}
 	self._changeListeners[uniqueIdentifier] = callback
@@ -53,9 +51,7 @@ end
 	Similar to `class:onBind()`, however it runs the provided callback
 	immediately.
 ]]
-function class:onBind(
-	callback: () -> ()
-): () -> ()
+function class:onBind(callback: () -> ()): () -> ()
 	local self = self :: InternalTypes.Observer
 	External.doTaskImmediate(callback)
 	return self:onChange(callback)
@@ -64,9 +60,7 @@ end
 --[[
 	Similar to `class:onChange()`, however it runs the provided callback once.
 ]]
-function class:onlyOnce(
-	callback: () -> ()
-): () -> ()
+function class:onlyOnce(callback: () -> ()): () -> ()
 	local self = self :: InternalTypes.Observer
 	local disconnect: () -> ()
 	disconnect = self:onChange(function()
@@ -76,10 +70,7 @@ function class:onlyOnce(
 	return disconnect
 end
 
-local function Observer(
-	scope: Types.Scope<unknown>,
-	watching: unknown
-): Types.Observer
+local function Observer(scope: Types.Scope<unknown>, watching: unknown): Types.Observer
 	if watching == nil then
 		External.logError("scopeMissing", nil, "Observers", "myScope:Observer(watching)")
 	end
@@ -88,12 +79,12 @@ local function Observer(
 
 	local self = setmetatable({
 		scope = scope,
-		dependencySet = if watchingState then {[watching] = true} else {},
+		dependencySet = if watchingState then { [watching] = true } else {},
 		dependentSet = {},
-		_changeListeners = {}
+		_changeListeners = {},
 	}, CLASS_METATABLE)
 	local self = (self :: any) :: InternalTypes.Observer
-	
+
 	local destroy = function()
 		self.scope = nil
 		for dependency in pairs(self.dependencySet) do

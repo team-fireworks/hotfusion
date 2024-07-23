@@ -9,7 +9,7 @@ local task = nil -- Disable usage of Roblox's task scheduler
 	into a scope. This also returns the queued items, allowing it to be used in
 	declarations.
 ]]
-	
+
 local Package = script.Parent.Parent
 local Types = require(Package.Types)
 local External = require(Package.External)
@@ -19,10 +19,7 @@ local External = require(Package.External)
 -- removes older tasks, and dontOverride disallows queuing multiple times.
 local OVERRIDE_MODE: "dontOverride" | "overrideEarliest" | "overrideLatest" = "dontOverride"
 
-local function queueScope<T...>(
-	scope: Types.Scope<unknown>,
-	...: T...
-): T...
+local function queueScope<T...>(scope: Types.Scope<unknown>, ...: T...): T...
 	local size = select("#", ...)
 	for index = 1, size do
 		local queued = select(index, ...)

@@ -21,7 +21,7 @@ local class = {}
 class.type = "State"
 class.kind = "Value"
 
-local CLASS_METATABLE = {__index = class}
+local CLASS_METATABLE = { __index = class }
 
 --[[
 	Returns the interior value of this state object.
@@ -39,10 +39,7 @@ function class:get()
 	External.logError("stateGetWasRemoved")
 end
 
-local function Value<T>(
-	scope: Types.Scope<unknown>,
-	initialValue: T
-): (Types.Value<T, any>, Types.ValueSetter)
+local function Value<T>(scope: Types.Scope<unknown>, initialValue: T): (Types.Value<T, any>, Types.ValueSetter)
 	if initialValue == nil and (typeof(scope) ~= "table" or (scope[1] == nil and next(scope) ~= nil)) then
 		External.logError("scopeMissing", nil, "Value", "myScope:Value(initialValue)")
 	end
@@ -50,7 +47,7 @@ local function Value<T>(
 	local self = setmetatable({
 		scope = scope,
 		dependentSet = {},
-		_value = initialValue
+		_value = initialValue,
 	}, CLASS_METATABLE)
 	local self = (self :: any) :: InternalTypes.Value<T, any>
 
@@ -67,10 +64,7 @@ local function Value<T>(
 		the state object and any dependents - use this with care as this can
 		lead to unnecessary updates.
 	]]
-	local function setSelf<S>(
-		newValue: S,
-		force: boolean?
-	): S
+	local function setSelf<S>(newValue: S, force: boolean?): S
 		local oldValue = self._value
 		if force or not isSimilar(oldValue, newValue) then
 			self._value = newValue

@@ -13,8 +13,8 @@ return function()
 
 	it("should destroy instances", function()
 		local expect = getfenv().expect
-		
-		local instance = New({}, "Folder") {}
+
+		local instance = New({}, "Folder")({})
 		-- one of the only reliable ways to test for proper destruction
 		local conn = instance.AncestryChanged:Connect(function() end)
 
@@ -25,8 +25,8 @@ return function()
 
 	it("should disconnect connections", function()
 		local expect = getfenv().expect
-		
-		local instance = New({}, "Folder") {}
+
+		local instance = New({}, "Folder")({})
 		local conn = instance.AncestryChanged:Connect(function() end)
 
 		doCleanup(conn)
@@ -36,7 +36,7 @@ return function()
 
 	it("should invoke callbacks", function()
 		local expect = getfenv().expect
-		
+
 		local didRun = false
 
 		doCleanup(function()
@@ -48,13 +48,13 @@ return function()
 
 	it("should invoke :destroy() methods", function()
 		local expect = getfenv().expect
-		
+
 		local didRun = false
 
 		doCleanup({
 			destroy = function()
 				didRun = true
-			end
+			end,
 		})
 
 		expect(didRun).to.equal(true)
@@ -62,13 +62,13 @@ return function()
 
 	it("should invoke :Destroy() methods", function()
 		local expect = getfenv().expect
-		
+
 		local didRun = false
 
 		doCleanup({
 			Destroy = function()
 				didRun = true
-			end
+			end,
 		})
 
 		expect(didRun).to.equal(true)
@@ -76,14 +76,14 @@ return function()
 
 	it("should clean up contents of arrays", function()
 		local expect = getfenv().expect
-		
+
 		local numRuns = 0
 
 		local function doRun()
 			numRuns += 1
 		end
 
-		local arr = {doRun, doRun, doRun}
+		local arr = { doRun, doRun, doRun }
 
 		doCleanup(arr)
 
@@ -95,21 +95,21 @@ return function()
 
 	it("should clean up contents of nested arrays", function()
 		local expect = getfenv().expect
-		
+
 		local numRuns = 0
 
 		local function doRun()
 			numRuns += 1
 		end
 
-		doCleanup({{doRun :: any, {doRun :: any, {doRun}}}})
+		doCleanup({ { doRun :: any, { doRun :: any, { doRun } } } })
 
 		expect(numRuns).to.equal(3)
 	end)
 
 	it("should clean up contents of arrays in reverse order", function()
 		local expect = getfenv().expect
-		
+
 		local runs = {}
 
 		local tasks = {}
@@ -135,7 +135,7 @@ return function()
 
 	it("should throw for recursive cleanups", function()
 		local expect = getfenv().expect
-		
+
 		local function cleanupFunc()
 			doCleanup(cleanupFunc)
 		end

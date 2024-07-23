@@ -16,7 +16,7 @@ local updateAll = require(Package.State.updateAll)
 
 local TweenScheduler = {}
 
-type Set<T> = {[T]: unknown}
+type Set<T> = { [T]: unknown }
 
 -- all the tweens currently being updated
 local allTweens: Set<InternalTypes.Tween<unknown>> = {}
@@ -24,27 +24,21 @@ local allTweens: Set<InternalTypes.Tween<unknown>> = {}
 --[[
 	Adds a Tween to be updated every render step.
 ]]
-function TweenScheduler.add(
-	tween: InternalTypes.Tween<unknown>
-)
+function TweenScheduler.add(tween: InternalTypes.Tween<unknown>)
 	allTweens[tween] = true
 end
 
 --[[
 	Removes a Tween from the scheduler.
 ]]
-function TweenScheduler.remove(
-	tween: InternalTypes.Tween<unknown>
-)
+function TweenScheduler.remove(tween: InternalTypes.Tween<unknown>)
 	allTweens[tween] = nil
 end
 
 --[[
 	Updates all Tween objects.
 ]]
-local function updateAllTweens(
-	now: number
-)
+local function updateAllTweens(now: number)
 	for tween in allTweens do
 		local currentTime = now - tween._currentTweenStartTime
 

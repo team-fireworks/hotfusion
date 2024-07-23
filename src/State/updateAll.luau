@@ -16,12 +16,10 @@ local Types = require(Package.Types)
 type Descendant = (Types.Dependent & Types.Dependency) | Types.Dependent
 
 -- Credit: https://blog.elttob.uk/2022/11/07/sets-efficient-topological-search.html
-local function updateAll(
-	root: Types.Dependency
-)
-	local counters: {[Descendant]: number} = {}
-	local flags: {[Descendant]: boolean} = {}
-	local queue: {Descendant} = {}
+local function updateAll(root: Types.Dependency)
+	local counters: { [Descendant]: number } = {}
+	local flags: { [Descendant]: boolean } = {}
+	local queue: { Descendant } = {}
 	local queueSize = 0
 	local queuePos = 1
 
@@ -37,7 +35,7 @@ local function updateAll(
 		local counter = counters[next]
 		counters[next] = if counter == nil then 1 else counter + 1
 		if (next :: any).dependentSet ~= nil then
-			local next = next :: (Types.Dependent & Types.Dependency)
+			local next = next :: Types.Dependent & Types.Dependency
 			for object in next.dependentSet do
 				queueSize += 1
 				queue[queueSize] = object
@@ -52,14 +50,14 @@ local function updateAll(
 		local next = queue[queuePos]
 		local counter = counters[next] - 1
 		counters[next] = counter
-		if 
-			counter == 0 
-			and flags[next] 
-			and next.scope ~= nil 
-			and next:update() 
-			and (next :: any).dependentSet ~= nil 
+		if
+			counter == 0
+			and flags[next]
+			and next.scope ~= nil
+			and next:update()
+			and (next :: any).dependentSet ~= nil
 		then
-			local next = next :: (Types.Dependent & Types.Dependency)
+			local next = next :: Types.Dependent & Types.Dependency
 			for object in next.dependentSet do
 				flags[object] = true
 			end

@@ -12,10 +12,10 @@ local External = require(Package.External)
 
 local function merge(
 	overwrite: "none" | "first" | "all",
-	into: {[unknown]: unknown},
-	from: {[unknown]: unknown}?,
-	...: {[unknown]: unknown}
-): {[unknown]: unknown}
+	into: { [unknown]: unknown },
+	from: { [unknown]: unknown }?,
+	...: { [unknown]: unknown }
+): { [unknown]: unknown }
 	if from == nil then
 		return into
 	else

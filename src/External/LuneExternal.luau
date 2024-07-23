@@ -16,7 +16,7 @@ local External = require(Package.External)
 local LuneExternal = {}
 
 LuneExternal.policies = {
-	allowWebLinks = true
+	allowWebLinks = true,
 }
 
 --[[

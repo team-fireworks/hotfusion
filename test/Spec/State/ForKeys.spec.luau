@@ -15,11 +15,15 @@ return function()
 
 	it("constructs in scopes", function()
 		local expect = getfenv().expect
-		
+
 		local scope = {}
-		local forObject = ForKeys(scope, {}, function()
-			-- intentionally blank
-		end :: any)
+		local forObject = ForKeys(
+			scope,
+			{},
+			function()
+				-- intentionally blank
+			end :: any
+		)
 
 		expect(forObject).to.be.a("table")
 		expect(forObject.type).to.equal("State")
@@ -31,11 +35,15 @@ return function()
 
 	it("is destroyable", function()
 		local expect = getfenv().expect
-		
+
 		local scope = {}
-		local forObject = ForKeys(scope, {}, function()
-			-- intentionally blank
-		end :: any)
+		local forObject = ForKeys(
+			scope,
+			{},
+			function()
+				-- intentionally blank
+			end :: any
+		)
 		expect(function()
 			doCleanup(forObject)
 		end).to.never.throw()
@@ -43,9 +51,9 @@ return function()
 
 	it("iterates on constants", function()
 		local expect = getfenv().expect
-		
+
 		local scope = {}
-		local data = {foo = 1, bar = 2}
+		local data = { foo = 1, bar = 2 }
 		local forObject = ForKeys(scope, data, function(_, _, key)
 			return key:upper()
 		end)
@@ -57,16 +65,16 @@ return function()
 
 	it("iterates on state objects", function()
 		local expect = getfenv().expect
-		
+
 		local scope = {}
-		local data = Value(scope, {foo = 1, bar = 2} :: {[string]: number})
+		local data = Value(scope, { foo = 1, bar = 2 } :: { [string]: number })
 		local forObject = ForKeys(scope, data, function(_, _, key)
 			return key:upper()
 		end)
 		expect(peek(forObject)).to.be.a("table")
 		expect(peek(forObject).FOO).to.equal(1)
 		expect(peek(forObject).BAR).to.equal(2)
-		data:set({baz = 3, garb = 4})
+		data:set({ baz = 3, garb = 4 })
 		expect(peek(forObject).FOO).to.equal(nil)
 		expect(peek(forObject).BAR).to.equal(nil)
 		expect(peek(forObject).BAZ).to.equal(3)
@@ -76,9 +84,9 @@ return function()
 
 	it("computes with constants", function()
 		local expect = getfenv().expect
-		
+
 		local scope = {}
-		local data = {foo = 1, bar = 2}
+		local data = { foo = 1, bar = 2 }
 		local forObject = ForKeys(scope, data, function(use, _, key)
 			return key :: any .. use("baz")
 		end)
@@ -89,9 +97,9 @@ return function()
 
 	it("computes with state objects", function()
 		local expect = getfenv().expect
-		
+
 		local scope = {}
-		local data = {foo = 1, bar = 2}
+		local data = { foo = 1, bar = 2 }
 		local suffix = Value(scope, "first")
 		local forObject = ForKeys(scope, data, function(use, _, key)
 			return key :: any .. use(suffix)
@@ -108,9 +116,9 @@ return function()
 
 	it("destroys and omits keys that error during processing", function()
 		local expect = getfenv().expect
-		
+
 		local scope = {}
-		local data = {foo = 1, bar = 2, baz = 3}
+		local data = { foo = 1, bar = 2, baz = 3 }
 		local suffix = Value(scope, "first")
 		local destroyed = {}
 		local forObject = ForKeys(scope, data, function(use, innerScope, key)
@@ -154,9 +162,9 @@ return function()
 
 	it("omits keys that return nil", function()
 		local expect = getfenv().expect
-		
+
 		local scope = {}
-		local data = {foo = 1, bar = 2, baz = 3}
+		local data = { foo = 1, bar = 2, baz = 3 }
 		local omitThird = Value(scope, false)
 		local forObject = ForKeys(scope, data, function(use, _, key)
 			if key == "bar" then
@@ -185,10 +193,10 @@ return function()
 
 	it("doesn't destroy inner scope on creation", function()
 		local expect = getfenv().expect
-		
+
 		local scope = {}
 		local destructed = {}
-		local data = Value(scope, {foo = 1, bar = 2})
+		local data = Value(scope, { foo = 1, bar = 2 })
 		local _ = ForKeys(scope, data, function(_, innerScope, key)
 			table.insert(innerScope, function()
 				destructed[key] = true
@@ -197,7 +205,7 @@ return function()
 		end)
 		expect(destructed.foo).to.equal(nil)
 		expect(destructed.bar).to.equal(nil)
-		data:set({foo = 1, bar = 2, baz = 3})
+		data:set({ foo = 1, bar = 2, baz = 3 })
 		expect(destructed.foo).to.equal(nil)
 		expect(destructed.bar).to.equal(nil)
 		expect(destructed.baz).to.equal(nil)
@@ -206,10 +214,10 @@ return function()
 
 	it("destroys inner scope on update", function()
 		local expect = getfenv().expect
-		
+
 		local scope = {}
 		local destructed = {}
-		local data = Value(scope, {foo = 1, bar = 2} :: {[string]: number})
+		local data = Value(scope, { foo = 1, bar = 2 } :: { [string]: number })
 		local _ = ForKeys(scope, data, function(_, innerScope, key)
 			table.insert(innerScope, function()
 				destructed[key] = true
@@ -218,7 +226,7 @@ return function()
 		end)
 		expect(destructed.foo).to.equal(nil)
 		expect(destructed.bar).to.equal(nil)
-		data:set({baz = 3})
+		data:set({ baz = 3 })
 		expect(destructed.foo).to.equal(true)
 		expect(destructed.bar).to.equal(true)
 		expect(destructed.baz).to.equal(nil)
@@ -227,10 +235,10 @@ return function()
 
 	it("destroys inner scope on destroy", function()
 		local expect = getfenv().expect
-		
+
 		local scope = {}
 		local destructed = {}
-		local data = Value(scope, {foo = 1, bar = 2})
+		local data = Value(scope, { foo = 1, bar = 2 })
 		local _ = ForKeys(scope, data, function(_, innerScope, key)
 			table.insert(innerScope, function()
 				destructed[key] = true
@@ -246,20 +254,20 @@ return function()
 
 	it("doesn't recompute when values change", function()
 		local expect = getfenv().expect
-		
+
 		local scope = {}
-		local data = Value(scope, {foo = 1, bar = 2})
+		local data = Value(scope, { foo = 1, bar = 2 })
 		local computations = 0
 		local _ = ForKeys(scope, data, function(_, _, key)
 			computations += 1
 			return string.upper(key)
 		end)
 		expect(computations).to.equal(2)
-		data:set({foo = 3, bar = 4})
+		data:set({ foo = 3, bar = 4 })
 		expect(computations).to.equal(2)
-		data:set({foo = 3, bar = 4, baz = 5})
+		data:set({ foo = 3, bar = 4, baz = 5 })
 		expect(computations).to.equal(3)
-		data:set({foo = 4, bar = 5, baz = 6})
+		data:set({ foo = 4, bar = 5, baz = 6 })
 		expect(computations).to.equal(3)
 		doCleanup(scope)
 	end)

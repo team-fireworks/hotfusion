@@ -19,16 +19,16 @@ return function()
 
 	itSKIP("should connect event handlers", function()
 		local expect = getfenv().expect
-		
+
 		local scope = {}
 		local fires = 0
-		local ins = New(scope, "Folder") {
+		local ins = New(scope, "Folder")({
 			Name = "Foo",
 
-			[OnEvent "AncestryChanged"] = function()
+			[OnEvent("AncestryChanged")] = function()
 				fires += 1
-			end
-		}
+			end,
+		})
 
 		ins.Parent = game
 		ins:Destroy()
@@ -39,28 +39,28 @@ return function()
 
 	it("should throw for non-existent events", function()
 		local expect = getfenv().expect
-		
+
 		expect(function()
 			local scope = {}
-			New(scope, "Folder") {
+			New(scope, "Folder")({
 				Name = "Foo",
 
-				[OnEvent "Frobulate"] = function() end
-			}
+				[OnEvent("Frobulate")] = function() end,
+			})
 			doCleanup(scope)
 		end).to.throw("cannotConnectEvent")
 	end)
 
 	it("should throw for non-event event handlers", function()
 		local expect = getfenv().expect
-		
+
 		expect(function()
 			local scope = {}
-			New(scope, "Folder") {
+			New(scope, "Folder")({
 				Name = "Foo",
 
-				[OnEvent "Name"] = function() end
-			}
+				[OnEvent("Name")] = function() end,
+			})
 			doCleanup(scope)
 		end).to.throw("cannotConnectEvent")
 	end)
@@ -70,29 +70,29 @@ return function()
 
 	itSKIP("shouldn't fire events during initialisation", function()
 		local expect = getfenv().expect
-		
+
 		local scope = {}
 		local fires = 0
-		local ins = New(scope, "Folder") {
+		local ins = New(scope, "Folder")({
 			Parent = game,
 			Name = "Foo",
 
-			[OnEvent "ChildAdded"] = function()
+			[OnEvent("ChildAdded")] = function()
 				fires += 1
 			end,
 
-			[OnEvent "Changed"] = function()
+			[OnEvent("Changed")] = function()
 				fires += 1
 			end,
 
-			[OnEvent "AncestryChanged"] = function()
+			[OnEvent("AncestryChanged")] = function()
 				fires += 1
 			end,
 
-			[Children] = New(scope, "Folder") {
-				Name = "Bar"
-			}
-		}
+			[Children] = New(scope, "Folder")({
+				Name = "Bar",
+			}),
+		})
 
 		local totalFires = fires
 		ins:Destroy()

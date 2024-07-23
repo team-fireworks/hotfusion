@@ -14,9 +14,9 @@ return function()
 
 	it("should derive from scopes", function()
 		local expect = getfenv().expect
-		
+
 		local scope = scoped({
-			foo = "2"
+			foo = "2",
 		})
 
 		local derived = deriveScope(scope)
@@ -28,13 +28,13 @@ return function()
 
 	it("should allow one additional method table", function()
 		local expect = getfenv().expect
-		
+
 		local scope = scoped({
-			foo = "2"
+			foo = "2",
 		})
 
 		local derived = deriveScope(scope, {
-			bar = "5"
+			bar = "5",
 		})
 
 		expect(derived.foo).to.equal("2")
@@ -44,15 +44,15 @@ return function()
 
 	it("should merge two method tables", function()
 		local expect = getfenv().expect
-		
+
 		local scope = scoped({
-			foo = "2"
+			foo = "2",
 		})
 
 		local derived = deriveScope(scope, {
-			bar = "5"
+			bar = "5",
 		}, {
-			baz = "10"
+			baz = "10",
 		})
 
 		expect(derived.foo).to.equal("2")
@@ -64,17 +64,17 @@ return function()
 
 	it("should merge three method tables", function()
 		local expect = getfenv().expect
-		
+
 		local scope = scoped({
-			foo = "2"
+			foo = "2",
 		})
 
 		local derived = deriveScope(scope, {
-			bar = "5"
+			bar = "5",
 		}, {
-			baz = "10"
+			baz = "10",
 		}, {
-			garb = "15"
+			garb = "15",
 		})
 
 		expect(derived.foo).to.equal("2")
@@ -90,11 +90,11 @@ return function()
 		local expect = getfenv().expect
 
 		local scope = scoped({})
-		
+
 		expect(function()
-			local originalA = {foo = "FOO", bar = "BAR", baz = "BAZ"}
-			local originalB = {frob = "FROB", garb = "GARB", grok = "GROK"}
-			local originalC = {grep = "GREP", grok = "GROK", grum = "GRUM"}
+			local originalA = { foo = "FOO", bar = "BAR", baz = "BAZ" }
+			local originalB = { frob = "FROB", garb = "GARB", grok = "GROK" }
+			local originalC = { grep = "GREP", grok = "GROK", grum = "GRUM" }
 			deriveScope(scope, originalA, originalB, originalC)
 		end).to.throw("mergeConflict")
 	end)
@@ -102,10 +102,10 @@ return function()
 	it("should *not* error on collision with original scope", function()
 		local expect = getfenv().expect
 
-		local scope = scoped({foo = "FOO", bar = "BAR", baz = "BAZ"})
-		
+		local scope = scoped({ foo = "FOO", bar = "BAR", baz = "BAZ" })
+
 		expect(function()
-			local originalA = {foo = "FOO", bar = "BAR", baz = "BAZ"}
+			local originalA = { foo = "FOO", bar = "BAR", baz = "BAZ" }
 			deriveScope(scope, originalA)
 		end).never.to.throw("mergeConflict")
 	end)

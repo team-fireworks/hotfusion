@@ -16,11 +16,15 @@ return function()
 
 	it("constructs in scopes", function()
 		local expect = getfenv().expect
-		
+
 		local scope = {}
-		local forObject = For(scope, {}, function()
-			-- intentionally blank
-		end :: any)
+		local forObject = For(
+			scope,
+			{},
+			function()
+				-- intentionally blank
+			end :: any
+		)
 
 		expect(forObject).to.be.a("table")
 		expect(forObject.type).to.equal("State")
@@ -32,12 +36,16 @@ return function()
 
 	it("is destroyable", function()
 		local expect = getfenv().expect
-		
+
 		local scope = {}
-		local forObject = For(scope, {}, function()
-			-- intentionally blank
-		end :: any)
-		
+		local forObject = For(
+			scope,
+			{},
+			function()
+				-- intentionally blank
+			end :: any
+		)
+
 		expect(function()
 			doCleanup(forObject)
 		end).to.never.throw()
@@ -45,9 +53,9 @@ return function()
 
 	it("processes pairs for constant tables", function()
 		local expect = getfenv().expect
-		
+
 		local scope = {}
-		local data = {foo = 1, bar = 2}
+		local data = { foo = 1, bar = 2 }
 		local seen = {}
 		local numCalls = 0
 		local forObject = For(scope, data, function(scope, inputPair)
@@ -55,7 +63,7 @@ return function()
 			local k, v = peek(inputPair).key, peek(inputPair).value
 			seen[k] = v
 			return Computed(scope, function(use)
-				return {key = string.upper(use(inputPair).key), value = (use(inputPair) :: any).value * 10}
+				return { key = string.upper(use(inputPair).key), value = (use(inputPair) :: any).value * 10 }
 			end)
 		end)
 		expect(numCalls).to.equal(2)
@@ -70,14 +78,14 @@ return function()
 
 	it("processes pairs for state tables", function()
 		local expect = getfenv().expect
-		
+
 		local scope = {}
-		local data = Value(scope, {foo = 1, bar = 2} :: {[string]: number})
+		local data = Value(scope, { foo = 1, bar = 2 } :: { [string]: number })
 		local numCalls = 0
 		local forObject = For(scope, data, function(scope, inputPair)
 			numCalls += 1
 			return Computed(scope, function(use)
-				return {key = string.upper(use(inputPair).key), value = (use(inputPair) :: any).value * 10}
+				return { key = string.upper(use(inputPair).key), value = (use(inputPair) :: any).value * 10 }
 			end)
 		end)
 		expect(numCalls).to.equal(2)
@@ -86,7 +94,7 @@ return function()
 		expect(peek(forObject).FOO).to.equal(10)
 		expect(peek(forObject).BAR).to.equal(20)
 
-		data:set({frob = 3, garb = 4})
+		data:set({ frob = 3, garb = 4 })
 
 		expect(numCalls).to.equal(2)
 		expect(peek(forObject).FOO).to.equal(nil)
@@ -94,14 +102,14 @@ return function()
 		expect(peek(forObject).FROB).to.equal(30)
 		expect(peek(forObject).GARB).to.equal(40)
 
-		data:set({frob = 5, garb = 6, baz = 7})
+		data:set({ frob = 5, garb = 6, baz = 7 })
 
 		expect(numCalls).to.equal(3)
 		expect(peek(forObject).FROB).to.equal(50)
 		expect(peek(forObject).GARB).to.equal(60)
 		expect(peek(forObject).BAZ).to.equal(70)
 
-		data:set({garb = 6, baz = 7})
+		data:set({ garb = 6, baz = 7 })
 
 		expect(numCalls).to.equal(3)
 		expect(peek(forObject).FROB).to.equal(nil)
@@ -113,15 +121,15 @@ return function()
 		expect(numCalls).to.equal(3)
 		expect(peek(forObject).GARB).to.equal(nil)
 		expect(peek(forObject).BAZ).to.equal(nil)
-		
+
 		doCleanup(scope)
 	end)
 
 	it("omits pairs that error", function()
 		local expect = getfenv().expect
-		
+
 		local scope = {}
-		local data = {first = 1, second = 2, third = 3}
+		local data = { first = 1, second = 2, third = 3 }
 		local forObject = For(scope, data, function(scope, inputPair)
 			assert(peek(inputPair).key ~= "second", "This is an intentional error from a unit test")
 			return inputPair
@@ -134,21 +142,25 @@ return function()
 
 	it("omits pairs when their value is nil", function()
 		local expect = getfenv().expect
-		
+
 		local scope = {}
-		local data = {first = 1, second = 2, third = 3}
+		local data = { first = 1, second = 2, third = 3 }
 		local omitThird = Value(scope, false)
-		local forObject = For(scope, data, function(scope, inputPair)
-			return Computed(scope, function(use)
-				if use(inputPair).key == "second" then
-					return {key = use(inputPair).key, value = nil}
-				elseif use(inputPair).key == "third" and use(omitThird) then
-					return {key = use(inputPair).key, value = nil}
-				else
-					return use(inputPair)
-				end
-			end)
-		end :: any)
+		local forObject = For(
+			scope,
+			data,
+			function(scope, inputPair)
+				return Computed(scope, function(use)
+					if use(inputPair).key == "second" then
+						return { key = use(inputPair).key, value = nil }
+					elseif use(inputPair).key == "third" and use(omitThird) then
+						return { key = use(inputPair).key, value = nil }
+					else
+						return use(inputPair)
+					end
+				end)
+			end :: any
+		)
 		expect(peek(forObject).first).to.equal(1)
 		expect(peek(forObject).second).to.equal(nil)
 		expect(peek(forObject).third).to.equal(3)
@@ -165,31 +177,31 @@ return function()
 
 	it("allows values to roam when their key is nil", function()
 		local expect = getfenv().expect
-		
+
 		local scope = {}
-		local data = Value(scope, {"first", "second", "third"})
+		local data = Value(scope, { "first", "second", "third" })
 		local numCalls = 0
 		local forObject = For(scope, data, function(scope, inputPair)
 			numCalls += 1
 			return Computed(scope, function(use)
-				return {key = nil, value = use(inputPair).value}
+				return { key = nil, value = use(inputPair).value }
 			end)
 		end)
 		expect(table.find(peek(forObject), "first")).to.be.ok()
 		expect(table.find(peek(forObject), "second")).to.be.ok()
 		expect(table.find(peek(forObject), "third")).to.be.ok()
 		expect(numCalls).to.equal(3)
-		data:set({"third", "first", "second"})
+		data:set({ "third", "first", "second" })
 		expect(table.find(peek(forObject), "first")).to.be.ok()
 		expect(table.find(peek(forObject), "second")).to.be.ok()
 		expect(table.find(peek(forObject), "third")).to.be.ok()
 		expect(numCalls).to.equal(3)
-		data:set({"second", "first"})
+		data:set({ "second", "first" })
 		expect(table.find(peek(forObject), "first")).to.be.ok()
 		expect(table.find(peek(forObject), "second")).to.be.ok()
 		expect(table.find(peek(forObject), "third")).to.never.be.ok()
 		expect(numCalls).to.equal(3)
-		data:set({"first"})
+		data:set({ "first" })
 		expect(table.find(peek(forObject), "first")).to.be.ok()
 		expect(table.find(peek(forObject), "second")).to.never.be.ok()
 		expect(numCalls).to.equal(3)

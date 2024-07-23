@@ -28,7 +28,7 @@ local class = {}
 class.type = "State"
 class.kind = "Computed"
 
-local CLASS_METATABLE = {__index = class}
+local CLASS_METATABLE = { __index = class }
 
 --[[
 	Called when a dependency changes value.
@@ -59,10 +59,15 @@ function class:update(): boolean
 		if isState(target) then
 			local target = target :: Types.StateObject<T>
 			if target.scope == nil then
-				External.logError("useAfterDestroy", nil, `The {target.kind} object`, "the Computed that is use()-ing it")
+				External.logError(
+					"useAfterDestroy",
+					nil,
+					`The {target.kind} object`,
+					"the Computed that is use()-ing it"
+				)
 			elseif whichLivesLonger(outerScope, self.oldestTask, target.scope, target.oldestTask) == "definitely-a" then
 				External.logWarn("possiblyOutlives", `The {target.kind} object`, "the Computed that is use()-ing it")
-			end		
+			end
 			self.dependencySet[target] = true
 			return (target :: InternalTypes.StateObject<T>):_peek()
 		else
@@ -141,7 +146,7 @@ local function Computed<T, S>(
 		_oldDependencySet = {},
 		_processor = processor,
 		_value = nil,
-		_innerScope = nil
+		_innerScope = nil,
 	}, CLASS_METATABLE)
 	local self = (self :: any) :: InternalTypes.Computed<T, S>
 
@@ -159,7 +164,7 @@ local function Computed<T, S>(
 	table.insert(scope, destroy)
 
 	self:update()
-	
+
 	return self
 end
 

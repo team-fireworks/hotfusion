@@ -19,15 +19,15 @@ return function()
 
 	itSKIP("should connect attribute change handlers", function()
 		local expect = getfenv().expect
-		
+
 		local scope = {}
 		local changeCount = 0
-		local child = New(scope, "Folder") {
-			[Attribute "Foo"] = "Bar",
-			[AttributeChange "Foo"] = function()
+		local child = New(scope, "Folder")({
+			[Attribute("Foo")] = "Bar",
+			[AttributeChange("Foo")] = function()
 				changeCount += 1
-			end
-		}
+			end,
+		})
 
 		child:SetAttribute("Foo", "Baz")
 		expect(changeCount).never.to.equal(0)
@@ -39,16 +39,16 @@ return function()
 
 	itSKIP("should pass the updated value as an argument", function()
 		local expect = getfenv().expect
-		
+
 		local scope = {}
 		local updatedValue = ""
 		local updated = false
-		local child = New(scope, "Folder") {
-			[AttributeChange "Foo"] = function(newValue)
+		local child = New(scope, "Folder")({
+			[AttributeChange("Foo")] = function(newValue)
 				updatedValue = newValue
 				updated = true
-			end
-		}
+			end,
+		})
 
 		child:SetAttribute("Foo", "Baz")
 		expect(updatedValue).to.equal("Baz")
@@ -57,12 +57,12 @@ return function()
 
 	it("should error when given an invalid handler", function()
 		local expect = getfenv().expect
-		
+
 		expect(function()
 			local scope = {}
-			New(scope, "Folder") {
-				[AttributeChange "Foo"] = 0
-			}
+			New(scope, "Folder")({
+				[AttributeChange("Foo")] = 0,
+			})
 			doCleanup(scope)
 		end).to.throw("invalidAttributeChangeHandler")
 	end)

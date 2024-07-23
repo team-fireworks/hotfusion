@@ -12,13 +12,8 @@ local Types = require(Package.Types)
 local merge = require(Package.Utility.merge)
 local scopePool = require(Package.Memory.scopePool)
 
-local function scoped(
-	...: {[unknown]: unknown}
-): any
-	return setmetatable(
-		scopePool.reuseAny() :: any or {},
-		{__index = merge("none", {}, ...)}
-	)
+local function scoped(...: { [unknown]: unknown }): any
+	return setmetatable(scopePool.reuseAny() :: any or {}, { __index = merge("none", {}, ...) })
 end
 
 return (scoped :: any) :: Types.ScopedConstructor

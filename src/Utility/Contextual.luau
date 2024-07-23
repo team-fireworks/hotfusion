@@ -18,8 +18,8 @@ local parseError = require(Package.Logging.parseError)
 local class = {}
 class.type = "Contextual"
 
-local CLASS_METATABLE = {__index = class}
-local WEAK_KEYS_METATABLE = {__mode = "k"}
+local CLASS_METATABLE = { __index = class }
+local WEAK_KEYS_METATABLE = { __mode = "k" }
 
 --[[
 	Returns the current value of this contextual.
@@ -38,18 +38,13 @@ end
 --[[
 	Temporarily assigns a value to this contextual.
 ]]
-function class:is(
-	newValue: unknown
-)
+function class:is(newValue: unknown)
 	-- Methods use colon `:` syntax for consistency and autocomplete but we
 	-- actually want them to operate on the `self` from this outer lexical scope
 	local outerSelf = self :: InternalTypes.Contextual<unknown>
 	local methods = {}
-	
-	function methods:during<T, A...>(
-		callback: (A...) -> T,
-		...: A...
-	): T
+
+	function methods:during<T, A...>(callback: (A...) -> T, ...: A...): T
 		local thread = coroutine.running()
 		local prevValue = outerSelf._valuesNow[thread]
 		-- Storing the value in this format allows us to distinguish storing
@@ -66,15 +61,13 @@ function class:is(
 	return methods
 end
 
-local function Contextual<T>(
-	defaultValue: T
-): Types.Contextual<T>
+local function Contextual<T>(defaultValue: T): Types.Contextual<T>
 	local self = setmetatable({
 		-- if we held strong references to threads here, then if a thread was
 		-- killed before this contextual had a chance to finish executing its
 		-- callback, it would be held strongly in this table forever
 		_valuesNow = setmetatable({}, WEAK_KEYS_METATABLE),
-		_defaultValue = defaultValue
+		_defaultValue = defaultValue,
 	}, CLASS_METATABLE)
 	local self = (self :: any) :: InternalTypes.Contextual<T>
 

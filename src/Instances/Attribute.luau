@@ -16,29 +16,31 @@ local Observer = require(Package.State.Observer)
 local peek = require(Package.State.peek)
 local whichLivesLonger = require(Package.Memory.whichLivesLonger)
 
-local keyCache: {[string]: Types.SpecialKey} = {}
+local keyCache: { [string]: Types.SpecialKey } = {}
 
-local function Attribute(
-	attributeName: string
-): Types.SpecialKey
+local function Attribute(attributeName: string): Types.SpecialKey
 	local key = keyCache[attributeName]
 	if key == nil then
 		key = {
 			type = "SpecialKey",
 			kind = "Attribute",
 			stage = "self",
-			apply = function(
-				self: Types.SpecialKey,
-				scope: Types.Scope<unknown>,
-				value: unknown,
-				applyTo: Instance
-			)
+			apply = function(self: Types.SpecialKey, scope: Types.Scope<unknown>, value: unknown, applyTo: Instance)
 				if isState(value) then
 					local value = value :: Types.StateObject<unknown>
 					if value.scope == nil then
-						External.logError("useAfterDestroy", nil, `The {value.kind} object, bound to [Attribute "{attributeName}"],`, `the {applyTo.ClassName} instance`)
+						External.logError(
+							"useAfterDestroy",
+							nil,
+							`The {value.kind} object, bound to [Attribute "{attributeName}"],`,
+							`the {applyTo.ClassName} instance`
+						)
 					elseif whichLivesLonger(scope, applyTo, value.scope, value.oldestTask) == "definitely-a" then
-						External.logWarn("possiblyOutlives", `The {value.kind} object, bound to [Attribute "{attributeName}"],`, `the {applyTo.ClassName} instance`)
+						External.logWarn(
+							"possiblyOutlives",
+							`The {value.kind} object, bound to [Attribute "{attributeName}"],`,
+							`the {applyTo.ClassName} instance`
+						)
 					end
 					Observer(scope, value :: any):onBind(function()
 						applyTo:SetAttribute(attributeName, peek(value))
@@ -46,7 +48,7 @@ local function Attribute(
 				else
 					applyTo:SetAttribute(attributeName, value)
 				end
-			end
+			end,
 		}
 		keyCache[attributeName] = key
 	end

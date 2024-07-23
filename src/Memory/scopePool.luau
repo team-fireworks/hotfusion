@@ -12,9 +12,7 @@ local pool = {}
 local poolSize = 0
 
 return {
-	giveIfEmpty = function<S>(
-		scope: Types.Scope<S>
-	): Types.Scope<S>?
+	giveIfEmpty = function<S>(scope: Types.Scope<S>): Types.Scope<S>?
 		if next(scope) == nil then
 			if poolSize < MAX_POOL_SIZE then
 				poolSize += 1
@@ -25,9 +23,7 @@ return {
 			return scope
 		end
 	end,
-	clearAndGive = function(
-		scope: Types.Scope<unknown>
-	)
+	clearAndGive = function(scope: Types.Scope<unknown>)
 		if poolSize < MAX_POOL_SIZE then
 			table.clear(scope)
 			poolSize += 1
@@ -42,5 +38,5 @@ return {
 			poolSize -= 1
 			return scope
 		end
-	end
+	end,
 }

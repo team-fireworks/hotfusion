@@ -41,9 +41,9 @@ do
 	end
 end
 
-local Hotfusion: Types.Hotfusion = table.freeze {
+local Hotfusion: Types.Hotfusion = table.freeze({
 	-- General
-	version = {major = 0, minor = 3, isRelease = false},
+	version = { major = 0, minor = 3, isRelease = false },
 	Contextual = require(script.Utility.Contextual),
 	ctorsOf = require(script.Utility.constructorsOf),
 	Safe = require(script.Utility.Safe),
@@ -55,7 +55,7 @@ local Hotfusion: Types.Hotfusion = table.freeze {
 	innerScope = require(script.Memory.innerScope),
 	queueScope = require(script.Memory.queueScope),
 	scoped = require(script.Memory.scoped),
-	
+
 	-- State
 	expect = require(script.State.expect),
 	flatten = require(script.State.flatten) :: Types.Flatten,
@@ -83,6 +83,6 @@ local Hotfusion: Types.Hotfusion = table.freeze {
 	-- Animation
 	Tween = require(script.Animation.Tween),
 	Spring = require(script.Animation.Spring),
-}
+})
 
 return Hotfusion
