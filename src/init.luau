@@ -58,6 +58,7 @@ local Hotfusion: Types.Hotfusion = table.freeze {
 	
 	-- State
 	expect = require(script.State.expect),
+	flatten = require(script.State.flatten) :: Types.Flatten,
 	Computed = require(script.State.Computed),
 	ForKeys = require(script.State.ForKeys) :: Types.ForKeysConstructor,
 	ForPairs = require(script.State.ForPairs) :: Types.ForPairsConstructor,

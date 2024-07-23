@@ -222,6 +222,22 @@ export type HydrateConstructor = (
 -- Is there a sane way to write out this type?
 -- ... I sure hope so.
 
+export type Flatten =
+	(<T>(target: UsedAs<T>, use: Use?) -> T)
+	& (<T>(target: StateObject<T>, use: Use?) -> T)
+	& (<T>(target: StateObject<UsedAs<T>>, use: Use?) -> T)
+	& (<T>(target: StateObject<StateObject<UsedAs<T>>>, use: Use?) -> T)
+	& (<T>(target: StateObject<StateObject<StateObject<UsedAs<T>>>>, use: Use?) -> T)
+	& (<T>(target: StateObject<StateObject<StateObject<StateObject<UsedAs<T>>>>>, use: Use?) -> T)
+	& (<T>(target: StateObject<StateObject<StateObject<StateObject<StateObject<UsedAs<T>>>>>>, use: Use?) -> T)
+	& (<T>(target: StateObject<StateObject<StateObject<StateObject<StateObject<StateObject<UsedAs<T>>>>>>>, use: Use?) -> T)
+	& (<T>(target: StateObject<StateObject<StateObject<StateObject<StateObject<StateObject<StateObject<UsedAs<T>>>>>>>>, use: Use?) -> T)
+	& (<T>(target: StateObject<StateObject<StateObject<StateObject<StateObject<StateObject<StateObject<StateObject<UsedAs<T>>>>>>>>>, use: Use?) -> T)
+	& (<T>(target: StateObject<StateObject<StateObject<StateObject<StateObject<StateObject<StateObject<StateObject<StateObject<UsedAs<T>>>>>>>>>>, use: Use?) -> T)
+	& (<T>(target: StateObject<StateObject<StateObject<StateObject<StateObject<StateObject<StateObject<StateObject<StateObject<StateObject<UsedAs<T>>>>>>>>>>>, use: Use?) -> T)
+	& (<T>(target: StateObject<StateObject<StateObject<StateObject<StateObject<StateObject<StateObject<StateObject<StateObject<StateObject<StateObject<UsedAs<T>>>>>>>>>>>>, use: Use?) -> T)
+	& (target: StateObject<unknown>, use: Use?) -> unknown
+
 export type DeriveScopeConstructor = (<S>(Scope<S>) -> Scope<S>)
 	& (<S, A>(Scope<S>, A & {}) -> Scope<S & A>)
 	& (<S, A, B>(Scope<S>, A & {}, B & {}) -> Scope<S & A & B>)
@@ -276,6 +292,7 @@ export type Hotfusion = {
 
 	expect: Use,
 	peek: Use,
+	flatten: Flatten,
 	Value: ValueConstructor,
 	Computed: ComputedConstructor,
 	ForPairs: ForPairsConstructor,

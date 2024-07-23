@@ -250,6 +250,11 @@ export type NewJSXConstructor = (element: JSX.ElementType, props: defined, child
 
 // elttob will be proud
 
+export type Flatten<T extends UsedAs<any> = any> = <U extends T>(
+	target: U,
+	use?: Use,
+) => U extends StateObject<unknown> ? Flatten<U> : U
+
 export type DeriveScopeConstructor = <Existing extends Scope<unknown>, AddMethods extends object[]>(
 	existing: Existing,
 	...addMethods: AddMethods
