@@ -16,6 +16,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - `doCleanup` now takes a variadic amount of tasks
+- Added `event:eventName`, `out:propertyName` and `attr:attributeName` shorthands
+  for `NewJSX`
 - Reorganized the Fusion namespace
   - `Contextual` has been moved to State
   - `Safe` has been moved to Components

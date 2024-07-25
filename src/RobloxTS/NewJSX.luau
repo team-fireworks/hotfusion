@@ -13,7 +13,7 @@ local task = nil -- Disable usage of Roblox's task scheduler
 local Package = script.Parent.Parent
 local Types = require(Package.Types)
 local External = require(Package.External)
--- Instances
+-- Roblox
 local Attribute = require(Package.Roblox.Attribute)
 local AttributeChange = require(Package.Roblox.AttributeChange)
 local AttributeOut = require(Package.Roblox.AttributeOut)
@@ -39,6 +39,10 @@ local SPECIAL_KEYS: { [string]: MaybeSpecialKey } = {
 	OnChange = OnChange,
 	OnEvent = OnEvent,
 	Out = Out,
+
+	attr = Attribute,
+	event = OnEvent,
+	out = Out,
 }
 
 local function NewJSX(component: string | Component, props: { [string]: unknown }, ...: Types.Child): Instance
