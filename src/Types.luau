@@ -289,7 +289,7 @@ export type Hotfusion = {
 	version: Version,
 	Safe: SafeConstructor,
 
-	doCleanup: (task: Task) -> (),
+	doCleanup: (...Task) -> (),
 	scoped: ScopedConstructor,
 	deriveScope: DeriveScopeConstructor,
 	queueScope: <T...>(scope: Scope<unknown>, T...) -> T...,

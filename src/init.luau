@@ -81,7 +81,7 @@ local Hotfusion: Types.Hotfusion = table.freeze({
 	OnEvent = require(script.Roblox.OnEvent),
 	Out = require(script.Roblox.Out),
 
-	-- RobloxTS
+	-- TypeScript
 	NewJSX = require(script.RobloxTS.NewJSX) :: Types.NewJSXConstructor,
 	ctorsOf = require(script.RobloxTS.ctorsOf),
 

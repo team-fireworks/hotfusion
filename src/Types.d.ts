@@ -272,13 +272,18 @@ export type ScopedConstructor = <Methods extends object[]>(
 	[K in keyof Methods[number]]: Methods[number][K]
 }>
 
+export type SwitchConstructor = <TI, TO, S>(
+	scope: Scope<S>,
+	target: UsedAs<TI>,
+) => (cases: Map<TI, (use: Use, scope: Scope<S>) => TO>) => StateObject<TO | undefined>
+
 export type Hotfusion = {
 	version: Version
 	Contextual: ContextualConstructor
 	constructorsOf: ConstructorsOfConstructor
 	Safe: SafeConstructor
 
-	doCleanup: (task: Task) => void
+	doCleanup: (...tasks: Task[]) => void
 	scoped: ScopedConstructor
 	deriveScope: DeriveScopeConstructor
 	queueScope: <T extends Task[]>(scope: Scope<unknown>, ...tasks: T) => LuaTuple<T>

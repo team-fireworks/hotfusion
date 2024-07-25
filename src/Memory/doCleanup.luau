@@ -54,72 +54,80 @@ local function castToPromise(x: unknown): Promise?
 	return nil
 end
 
-local function doCleanup(task: Types.Task): ()
-	if alreadyDestroying[task] then
-		return External.logError("destroyedTwice")
-	end
-	alreadyDestroying[task] = true
-
-	-- case 1: Instance
-	if typeof(task) == "Instance" then
-		task:Destroy()
-
-	-- case 2: callback
-	elseif typeof(task) == "function" then
-		task()
-
-	-- case 3: Connection
-	elseif castToConnection(task) then
-		local task = task :: Connection
-		if task.Connected == true then
-			task:Disconnect()
+local function doCleanup(...: Types.Task): ()
+	local tasks = select("#", ...)
+	for i = 1, tasks do
+		local task = select(i, ...)
+		if alreadyDestroying[task] then
+			return External.logError("destroyedTwice")
 		end
+		alreadyDestroying[task] = true
 
-	-- case 4: threads
-	elseif typeof(task) == "thread" then
-		local cancelled = false
-		if task ~= coroutine.running() then
-			cancelled = coroutine.close(task)
-		end
-		if not cancelled then
-			local toCancel = task
-			External.doTaskDeferred(function()
-				coroutine.close(toCancel)
-			end)
-		end
+		-- case 1: nil
+		if typeof(task) == nil then
+			-- nothing to be done
 
-	-- case 5: Promise
-	elseif castToPromise(task) then
-		local task = task :: Promise
-		if task:getStatus() == "Started" then
-			task:cancel()
-		end
-	elseif typeof(task) == "table" then
-		local task: { [unknown]: unknown } = task :: any
+			-- case 2: Instance
+		elseif typeof(task) == "Instance" then
+			task:Destroy()
 
-		local destroyed = false
-		for _, method in ipairs(GENERIC_CLEANUP_METHODS) do
-			if typeof(task[method]) == "function" then
-				-- case 6: destructor method
-				local destructor = task[method] :: (self: typeof(task)) -> ()
-				destroyed = pcall(destructor, task)
-				break
+		-- case 3: callback
+		elseif typeof(task) == "function" then
+			task()
+
+		-- case 4: Connection
+		elseif castToConnection(task) then
+			local task = task :: Connection
+			if task.Connected == true then
+				task:Disconnect()
+			end
+
+		-- case 5: threads
+		elseif typeof(task) == "thread" then
+			local cancelled = false
+			if task ~= coroutine.running() then
+				cancelled = coroutine.close(task)
+			end
+			if not cancelled then
+				local toCancel = task
+				External.doTaskDeferred(function()
+					coroutine.close(toCancel)
+				end)
+			end
+
+		-- case 6: Promise
+		elseif castToPromise(task) then
+			local task = task :: Promise
+			if task:getStatus() == "Started" then
+				task:cancel()
+			end
+		elseif typeof(task) == "table" then
+			local task: { [unknown]: unknown } = task :: any
+
+			local destroyed = false
+			for _, method in ipairs(GENERIC_CLEANUP_METHODS) do
+				if typeof(task[method]) == "function" then
+					-- case 7: destructor method
+					local destructor = task[method] :: (self: typeof(task)) -> ()
+					destroyed = pcall(destructor, task)
+					break
+				end
+			end
+
+			-- case 8: array of tasks
+			if not destroyed and task[1] ~= nil then
+				local task = task :: { Types.Task }
+				-- It is important to iterate backwards through the table, since
+				-- objects are added in order of construction.
+				for index = #task, 1, -1 do
+					doCleanup(task[index])
+					task[index] = nil
+				end
 			end
 		end
 
-		-- case 8: array of tasks
-		if not destroyed and task[1] ~= nil then
-			local task = task :: { Types.Task }
-			-- It is important to iterate backwards through the table, since
-			-- objects are added in order of construction.
-			for index = #task, 1, -1 do
-				doCleanup(task[index])
-				task[index] = nil
-			end
-		end
+		alreadyDestroying[task] = nil
 	end
-
-	alreadyDestroying[task] = nil
 end
 
 return doCleanup

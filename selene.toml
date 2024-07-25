@@ -1,6 +1,9 @@
 std = "selene-requires"
 exclude = ["test/TestEZ/**"]
 
+[config]
+	empty_if = { comments_count = true }
+
 [rules]
 	# Too aggressive in tests
 	unused_variable = "allow"

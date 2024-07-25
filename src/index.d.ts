@@ -28,11 +28,7 @@ declare namespace Hotfusion {
 	export type Value<T, S = T> = Types.Value<T, S>
 	export type Version = Types.Version
 
-	/* General */
 	export const version: Version
-	export const Contextual: Types.ContextualConstructor
-	export const ctorsOf: Types.ConstructorsOfConstructor
-	export const Safe: Types.SafeConstructor
 
 	/* Memory */
 	/** @deprecated use `doCleanup()` instead */
@@ -47,6 +43,7 @@ declare namespace Hotfusion {
 	export const expect: Types.Use
 	export const flatten: Types.Flatten
 	export const Computed: Types.ComputedConstructor
+	export const Contextual: Types.ContextualConstructor
 	export const ForKeys: Types.ForKeysConstructor
 	export const ForPairs: Types.ForPairsConstructor
 	export const ForValues: Types.ForValuesConstructor
@@ -54,7 +51,26 @@ declare namespace Hotfusion {
 	export const peek: Use
 	export const Value: Types.ValueConstructor
 
-	/* Roblox API */
+	/* Components */
+	export function Show<T, S>(
+		scope: Scope<S>,
+		props: {
+			when: UsedAs<any>
+			component: (use: Use, scope: Scope<S>) => T
+		},
+	): StateObject<T | undefined>
+	export function Show<Component, Fallback, S>(
+		scope: Scope<S>,
+		props: {
+			when: UsedAs<any>
+			component: (use: Use, scope: Scope<S>) => Component
+			fallback: (use: Use, scope: Scope<S>) => Fallback
+		},
+	): StateObject<Component | Fallback>
+	export const Switch: Types.SwitchConstructor
+	export const Safe: Types.SafeConstructor
+
+	/* Roblox */
 	export const Attribute: (attributeName: string) => SpecialKey
 	export const AttributeChange: (attributeName: string) => SpecialKey
 	export const AttributeOut: (attributeName: string) => SpecialKey
@@ -62,10 +78,13 @@ declare namespace Hotfusion {
 	export const Children: Types.Children
 	export const Hydrate: Types.HydrateConstructor
 	export const New: Types.NewConstructor
-	export const NewJSX: Types.NewJSXConstructor
 	export const OnChange: <T extends string>(propertyName: T) => Types.OnChangeKey<T>
 	export const OnEvent: <T extends string>(eventName: T) => Types.OnEventKey<T>
 	export const Out: <T extends string>(propertyName: T) => Types.OutKey<T>
+
+	/* TypeScript */
+	export const NewJSX: Types.NewJSXConstructor
+	export const ctorsOf: Types.ConstructorsOfConstructor
 
 	/* Animation */
 	export const Tween: Types.TweenConstructor
