@@ -29,6 +29,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Fixed `[AttributeOut]` requiring a `Value` object
 
-## 0.3-hotfusion.1
+## 0.3.0-hotfusion.1
 
 Initial release
